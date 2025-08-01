@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://github.com/davidhuotkeo/bakong-khqr/releases/download/bakong-khqr-1.0.6/khqr-1.0.6.min.js"></script>
+</head>
+<body>
+    <div id="response"></div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const {BakongKHQR, khqrData, MerchantInfo} = window.BakongKHQR;
+
+            const merchantInfo = {
+                bakongAccountID: "vandet@abaa",
+                merchantName: "KHIT Development",
+                merchantCity: "Phnom Penh",
+                merchantId: "199155",
+                acquiringBank: "Bakong KHQR",
+            };
+
+            const optionalData = {
+                currency: khqrData.currency.usd,
+                amount: 0.01,
+                mobileNumber: "85598836893",
+                billNumber: generateBillNumber(),
+                storeLabel: "KHIT Development",
+                terminalLabel: "199155",
+            };
+
+            function generateBillNumber() {
+                return "INV-" + new Date().toISOString().replace(/[-:.TZ]/g, "");
+            }
+
+            const merchantInfoInstance = new MerchantInfo(
+                merchantInfo.bakongAccountID,
+                merchantInfo.merchantName,
+                merchantInfo.merchantCity,
+                merchantInfo.merchantId,
+                merchantInfo.acquiringBank,
+                optionalData
+            );
+
+            const khqr = new BakongKHQR();
+            const response = khqr.generateMerchant(merchantInfoInstance);
+
+            // Display the response data on the frontend
+            const responseElement = document.getElementById("response");
+            responseElement.textContent = JSON.stringify(response, null, 2);
+        });
+    </script>
+</body>
+</html>

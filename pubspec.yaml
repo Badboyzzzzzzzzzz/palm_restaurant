@@ -1,0 +1,185 @@
+name: palm_ecommerce_app
+description: "A new Flutter project."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  # Flutter SDK dependency
+  flutter:
+    sdk: flutter
+  # Provides localizations for Flutter apps
+  flutter_localizations:
+    sdk: flutter
+  # iOS-style icons
+  cupertino_icons: ^1.0.8
+  #initialize Firebase in your app
+  firebase_core: ^3.11.0
+  # Handles Firebase Authentication
+  firebase_auth: ^5.4.2
+  # Displays toast messages 
+  fluttertoast: ^8.2.12
+  # Used for writing and running unit tests
+  test: ^1.25.15
+  # Powerful state management and routing package
+  get: ^4.7.2
+  # Beautiful and customizable PIN input field
+  pinput: ^5.0.1
+  # phone number input field 
+  intl_phone_field: ^3.2.0
+  # Google Sign-In integration
+  google_sign_in: ^6.2.2
+  # Cloud Firestore database access
+  cloud_firestore: ^5.6.4
+  # Internationalization 
+  intl: ^0.20.2
+  # Provides a large collection of icons
+  iconsax: ^0.0.8
+  # Dependency injection and state management
+  provider: ^6.1.2
+  # Allows picking files from the device
+  file_picker: ^9.0.2
+  # Mocking library for unit testing
+  mocktail: ^1.0.4
+  # Makes list items swipeable 
+  flutter_slidable: ^4.0.0
+  # Efficiently loads and caches images from the network
+  cached_network_image: ^3.4.1
+  # For making HTTP requests
+  http: ^1.3.0
+  # For storing key-value pairs persistently 
+  shared_preferences: ^2.5.2
+  # Package for working with latitude and longitude values
+  latlong2: ^0.9.1
+  # Get user’s current location
+  location: ^8.0.0
+  # Draws polylines on Google Maps
+  flutter_polyline_points: ^2.1.0
+  # Displays and interacts with Google Maps
+  google_maps_flutter: ^2.10.1
+  # Access geolocation features and distance calculation
+  geolocator: ^13.0.2
+  # Open URLs 
+  url_launcher: ^6.3.1
+  # Image and content carousel/slider
+  carousel_slider: ^5.0.0
+  # Pick images from gallery or camera
+  image_picker: ^1.1.2
+  # Firebase cloud storage access
+  firebase_storage: ^12.4.4
+  # Load environment variables from a `.env` file
+  flutter_dotenv: ^5.2.1
+  # Share content with other apps 
+  share_plus: ^11.0.0
+  # Use Google Fonts in your app
+  google_fonts: ^6.2.1
+  # Official SDK for generating KHQR (Bakong) QR codes
+  khqr_sdk: ^1.3.1
+  # Render SVG images
+  flutter_svg: ^2.2.0
+  # Beautiful and customizable loading animations
+  loading_animation_widget: ^1.3.0
+  # Another collection of loading spinners
+  flutter_spinkit: ^5.2.1
+  # A customizable "Add to Cart" animated button
+  flutter_add_to_cart_button: ^1.2.0
+  # Easy-to-use animation package
+  flutter_animate: ^4.5.2
+  # Render Lottie animations
+  lottie: ^3.3.1
+  # Convert coordinates into addresses 
+  geocoding: ^4.0.0
+  # Generates Dart code from assets 
+  flutter_gen: ^5.11.0
+
+  
+
+
+
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  country_picker: ^2.0.25
+  json_serializable: ^6.9.4
+
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^5.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/
+    - assets/icons/
+    - assets/images/
+    - assets/fonts/
+    - assets/palmlogo.png
+
+
+
+  # Add the following section for internationalization
+  generate: true
+
+  
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/to/resolution-aware-images
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/to/asset-from-package
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package
