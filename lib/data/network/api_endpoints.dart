@@ -8,6 +8,7 @@ class ApiConstant {
   static const String changePassword = '/api/change-password';
   static const String getUserInfo = 'api/user-info';
   static const String googleSignIn = '/api/login-with-social-media';
+  static const String updateProfile = '/api/update-profile';
 
   // Product Endpoints
   static const String products = '/api/get-child-category/PALM-0006';

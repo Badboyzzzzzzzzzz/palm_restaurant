@@ -113,8 +113,8 @@ class _OrderScreenState extends State<OrderScreen>
         automaticallyImplyLeading: false,
         centerTitle: true,
         backgroundColor: primaryBackgroundColor,
-        title: Text(AppLocalizations.of(context)!.orders,
-            style: TextStyle(color: Colors.white)),
+        title: Text(AppLocalizations.of(context)?.orders ?? 'Orders',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         actions: [
           IconButton(
             onPressed: () {

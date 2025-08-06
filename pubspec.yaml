@@ -114,6 +114,8 @@ dependencies:
   geocoding: ^4.0.0
   # Generates Dart code from assets 
   flutter_gen: ^5.11.0
+  # Monitor network connectivity
+  connectivity_plus: ^6.1.4
 
   
 
@@ -148,11 +150,12 @@ flutter:
     - assets/
     - assets/icons/
     - assets/images/
-    - assets/fonts/
+    - assets/icons/
     - assets/palmlogo.png
-
-
-
+    - assets/camera-outline.png
+    - assets/icons/icnNavHome1.png
+    - assets/icons/icnNavUser.png
+    - assets/icons/cart.png
   # Add the following section for internationalization
   generate: true
 

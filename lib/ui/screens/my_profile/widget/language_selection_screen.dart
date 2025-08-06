@@ -1,18 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:palm_ecommerce_app/ui/provider/language_provider.dart';
 import 'package:palm_ecommerce_app/util/themes.dart';
 import 'package:palm_ecommerce_app/l10n/app_localizations.dart';
 
-class LanguageSelectionScreen extends StatefulWidget {
+class LanguageSelectionScreen extends StatelessWidget {
   const LanguageSelectionScreen({super.key});
 
-  @override
-  State<LanguageSelectionScreen> createState() =>
-      _LanguageSelectionScreenState();
-}
-
-class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   @override
   Widget build(BuildContext context) {
     final languageProvider = context.watch<LanguageProvider>();
@@ -27,7 +23,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          AppLocalizations.of(context)!.language,
+          AppLocalizations.of(context)?.language ?? 'Language',
           style: semiBoldText20.copyWith(color: Colors.white),
         ),
       ),
@@ -56,13 +52,14 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    AppLocalizations.of(context)!.language,
+                    AppLocalizations.of(context)?.language ?? 'Language',
                     style: semiBoldText20.copyWith(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    AppLocalizations.of(context)!.preferLangauge,
+                    AppLocalizations.of(context)?.preferLangauge ??
+                        'Choose your preferred language',
                     style: regularText14.copyWith(
                       color: Colors.white.withOpacity(0.8),
                     ),
@@ -71,40 +68,32 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                 ],
               ),
             ),
-
-            // Language options
             Expanded(
               child: Container(
                 margin: const EdgeInsets.all(20),
                 child: Column(
                   children: [
-                    // English option
                     _buildLanguageOption(
                       languageCode: 'en',
                       languageName: 'English',
                       nativeName: 'English',
                       flag: '🇺🇸',
                       isSelected: currentLanguage == 'en',
-                      onTap: () => _changeLanguage('en'),
+                      onTap: () => _changeLanguage(context, 'en'),
                     ),
-
                     const SizedBox(height: 16),
-
-                    // Khmer option
                     _buildLanguageOption(
                       languageCode: 'km',
                       languageName: 'ខ្មែរ',
                       nativeName: 'Khmer',
                       flag: '🇰🇭',
                       isSelected: currentLanguage == 'km',
-                      onTap: () => _changeLanguage('km'),
+                      onTap: () => _changeLanguage(context, 'km'),
                     ),
                   ],
                 ),
               ),
             ),
-
-            // Bottom info
             Container(
               padding: const EdgeInsets.all(20),
               child: Text(
@@ -195,27 +184,20 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
     );
   }
 
-  void _changeLanguage(String languageCode) async {
+  void _changeLanguage(BuildContext context, String languageCode) async {
     final languageProvider = context.read<LanguageProvider>();
 
-    // Show loading indicator
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
-        return const Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        );
-      },
+      builder: (_) => const Center(
+        child: CircularProgressIndicator(
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+        ),
+      ),
     );
-    // Change language
     await languageProvider.changeLanguage(languageCode);
-    // Hide loading indicator
     Navigator.of(context).pop();
-
-    // Show success message
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(

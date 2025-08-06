@@ -47,8 +47,8 @@ class _HorizontalNewState extends State<NewArrivalFood> {
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Text(
-                'Error loading products: ${state.error}',
-                style: TextStyle(color: Colors.black),
+                'Error to loading product please check your connection!',
+                style: TextStyle(color: Colors.black, fontSize: 18),
               ),
             ),
           );

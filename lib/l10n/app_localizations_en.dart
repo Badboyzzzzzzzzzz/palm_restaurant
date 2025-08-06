@@ -50,7 +50,7 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get favorites => 'Favorites';
   @override
-  String get personInfo => 'ផ្ទាល់ខ្លួន';
+  String get personInfo => 'Personal Information';
 
   @override
   String get notifications => 'Notifications';
@@ -391,7 +391,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hotPromotion => 'Hot Promotion';
   @override
   String get preferLangauge => 'Select your preferred language for the app';
-
   @override
   String get changePassword => 'Change Password';
 }

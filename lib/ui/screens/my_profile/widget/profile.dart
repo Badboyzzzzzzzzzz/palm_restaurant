@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:palm_ecommerce_app/l10n/app_localizations.dart';
 import 'package:palm_ecommerce_app/ui/provider/async_values.dart';
+import 'package:palm_ecommerce_app/ui/screens/my_profile/widget/edit_user_profile.dart';
 import 'package:palm_ecommerce_app/ui/screens/my_profile/widget/profile_picture.dart';
 import 'package:palm_ecommerce_app/util/data.dart';
 import 'package:palm_ecommerce_app/util/themes.dart';
@@ -47,7 +48,7 @@ class _ProfileState extends State<Profile> {
           backgroundColor: primaryBackgroundColor,
           elevation: 0,
           title: Text(
-            AppLocalizations.of(context)!.profile,
+            AppLocalizations.of(context)?.profile ?? 'My Profile',
             style: TextStyle(
                 fontSize: 24, fontWeight: FontWeight.bold, color: whiteColor),
           ),
@@ -100,7 +101,6 @@ class _ProfileState extends State<Profile> {
         ),
       );
     }
-
     // Continue with your existing UI for success state
     final userInfo = userState.data;
     return Scaffold(
@@ -109,7 +109,7 @@ class _ProfileState extends State<Profile> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          AppLocalizations.of(context)!.profile,
+          AppLocalizations.of(context)?.profile ?? 'My Profile',
           style: TextStyle(
               fontSize: 24, fontWeight: FontWeight.bold, color: whiteColor),
         ),
@@ -173,7 +173,8 @@ class _ProfileState extends State<Profile> {
                                 ),
                                 SizedBox(width: 10),
                                 Text(
-                                  AppLocalizations.of(context)!.personInfo,
+                                  AppLocalizations.of(context)?.personInfo ??
+                                      'Personal Information',
                                   style: semiBoldText16.copyWith(
                                       color: blackColor),
                                 ),
@@ -185,10 +186,21 @@ class _ProfileState extends State<Profile> {
                                         primaryBackgroundColor.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(8),
                                   ),
-                                  child: Icon(
-                                    Icons.edit_outlined,
-                                    color: primaryBackgroundColor,
-                                    size: 18,
+                                  child: IconButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const EditUserProfile(),
+                                        ),
+                                      );
+                                    },
+                                    icon: Icon(
+                                      Icons.edit_outlined,
+                                      color: primaryBackgroundColor,
+                                      size: 18,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -203,13 +215,15 @@ class _ProfileState extends State<Profile> {
                           Divider(height: 1),
                           _buildInfoItem(
                             icon: Icons.person_outline,
-                            title: AppLocalizations.of(context)!.userName,
+                            title: AppLocalizations.of(context)?.userName ??
+                                'Username',
                             value: userInfo?.name ?? "N/A",
                           ),
                           Divider(height: 1),
                           _buildInfoItem(
                             icon: Icons.phone_outlined,
-                            title: AppLocalizations.of(context)!.phoneNumber,
+                            title: AppLocalizations.of(context)?.phoneNumber ??
+                                'Phone Number',
                             value: userInfo?.phone ?? "N/A",
                           ),
                           Divider(height: 1),
@@ -217,6 +231,16 @@ class _ProfileState extends State<Profile> {
                             icon: Icons.email_outlined,
                             title: "Email",
                             value: userInfo?.email ?? "N/A",
+                          ),
+                          _buildInfoItem(
+                            icon: Icons.email_outlined,
+                            title: "Gender",
+                            value: userInfo?.gender ?? "N/A",
+                          ),
+                          _buildInfoItem(
+                            icon: Icons.email_outlined,
+                            title: "Date of Birth",
+                            value: userInfo?.dob ?? "N/A",
                           ),
                         ],
                       ),

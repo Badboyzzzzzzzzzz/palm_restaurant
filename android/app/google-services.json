@@ -14,14 +14,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "864597870395-5bjm9ve7cueh3mhjqdnlj4afbrm4s7sv.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.test_auth",
-            "certificate_hash": "7247cdffd4f036929477d19b4e2ef93f0cde80f2"
-          }
-        },
-        {
           "client_id": "864597870395-s8k95vumth5i1f53kbbicmld21p98u7p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -66,14 +58,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "864597870395-7tlsp2b3l3dq7dv8d438ul333o77g1rl.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.tourism_app",
-            "certificate_hash": "7247cdffd4f036929477d19b4e2ef93f0cde80f2"
-          }
-        },
-        {
           "client_id": "864597870395-jsroof1rrl4h1n1piqv6p4o808g93k0r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -81,6 +65,42 @@
             "certificate_hash": "198d9780e39fd941576afb91a91bc47468bfca77"
           }
         },
+        {
+          "client_id": "864597870395-m86faoi8jf8b8q2ai0mb6j4trnnv0sav.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaRxmjPMAX7FmriOHpW6gYY8gMd4eVEPM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "864597870395-m86faoi8jf8b8q2ai0mb6j4trnnv0sav.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "864597870395-fij26l13vqjvo1geqtaecuvv6alp04pp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.tourismApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:864597870395:android:7db3f2128f1ec1a661191e",
+        "android_client_info": {
+          "package_name": "com.palm.restaurant"
+        }
+      },
+      "oauth_client": [
         {
           "client_id": "864597870395-m86faoi8jf8b8q2ai0mb6j4trnnv0sav.apps.googleusercontent.com",
           "client_type": 3

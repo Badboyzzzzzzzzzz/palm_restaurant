@@ -3,10 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
+import 'package:palm_ecommerce_app/data/dto/user_dto.dart';
 import 'package:palm_ecommerce_app/data/network/api_endpoints.dart';
-import 'package:palm_ecommerce_app/data/repository/authentication_repository.dart';
-import 'package:palm_ecommerce_app/models/user/user.dart';
 import 'package:palm_ecommerce_app/data/network/fetchingdata.dart';
+import 'package:palm_ecommerce_app/data/repository/authentication_repository.dart';
+import 'package:palm_ecommerce_app/models/params/profile_param.dart';
+import 'package:palm_ecommerce_app/models/user/user.dart';
 import 'package:palm_ecommerce_app/util/data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logging/logging.dart';
@@ -381,9 +384,7 @@ class AuthenticationApiRepository extends AuthenticationRepository {
         usetoken = accessToken.replaceAll('"', '');
         isToken = true;
         _logger.info('Google sign in successful, token saved');
-        Users.fromJson(
-          accessToken,
-        );
+        UserDto.fromJson(accessToken, data ?? responseBody['user']);
         return;
       }
       throw _handleErrorResponse(response, 'Google sign in');
@@ -465,5 +466,62 @@ class AuthenticationApiRepository extends AuthenticationRepository {
   @override
   Future<DocumentSnapshot> getUserData(String uid) async {
     return await _firestore.collection('users').doc(uid).get();
+  }
+
+  @override
+  Future<void> updateUserProfile(ProfileParams params) async {
+    try {
+      final token = await getCurrentToken();
+      if (token.isEmpty) {
+        throw Exception('No authentication token available');
+      }
+
+      // Use different request method based on whether we have a file to upload
+      http.Response response;
+      if (params.profile_photo != null) {
+        // Use multipart request for file upload
+        var url = Uri.https(FetchingData.baseUrl.replaceAll('https://', ''),
+            ApiConstant.updateProfile);
+        var request = http.MultipartRequest('POST', url);
+
+        // Add file
+        var profileImage = await http.MultipartFile.fromPath(
+            'profile_photo', params.profile_photo!.path);
+        request.files.add(profileImage);
+
+        // Add headers
+        request.headers.addAll(_getAuthHeaders(token));
+
+        // Add all other fields
+        var jsonData = params.toJson();
+        jsonData.forEach((key, value) {
+          if (value != null) {
+            request.fields[key] = value.toString();
+          }
+        });
+
+        // Send request
+        var streamedResponse = await request.send();
+        response = await http.Response.fromStream(streamedResponse);
+      } else {
+        // Use regular request if no file to upload
+        response = await FetchingData.postHeader(
+          ApiConstant.updateProfile,
+          _getAuthHeaders(token),
+          params.toJson(),
+        );
+      }
+      _logger
+          .info('Update profile response status code: ${response.statusCode}');
+      _logger.info('Update profile response body: ${response.body}');
+      if (response.statusCode == 200) {
+        _logger.info('User profile updated successfully');
+        return;
+      }
+      throw _handleErrorResponse(response, 'Update profile');
+    } catch (e) {
+      _logger.severe('Update profile error: $e');
+      rethrow;
+    }
   }
 }

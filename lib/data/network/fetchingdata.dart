@@ -8,7 +8,6 @@ class FetchingData {
   static Future<http.Response> postData(String provideUrl,
       Map<String, dynamic> param, Map<String, String> headers) async {
     var url = Uri.https(baseUrl.replaceAll('https://', ''), provideUrl);
-
     dynamic body;
     if (headers['Content-Type'] == 'application/x-www-form-urlencoded') {
       body = param;
@@ -103,14 +102,35 @@ class FetchingData {
     }
   }
 
-  static Future<http.Response> postCart(
-      String provideUrl,
-      Map<String, dynamic> param,
-      Map<String, String> header,
-      Map<dynamic, dynamic> parBody) async {
-    var url = Uri.https(baseUrl.replaceAll('https://', ''), provideUrl, param);
-    final response = await http.post(url, headers: header, body: parBody);
-    return response;
+   static Future<http.Response> postMultipart(
+    String url,
+    Map<String, String> headers,
+    Map<String, dynamic> fields,
+    Map<String, File>? files,
+  ) async {
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+  
+    // Add headers
+    request.headers.addAll(headers);
+
+    // Add text fields
+    fields.forEach((key, value) {
+      request.fields[key] = value.toString();
+    });
+    
+    // Add files
+    if (files != null) {
+      for (var entry in files.entries) {
+        var multipartFile = await http.MultipartFile.fromPath(
+          entry.key,
+          entry.value.path,
+        );
+        request.files.add(multipartFile);
+      }
+    }
+    
+    var streamedResponse = await request.send();
+    return await http.Response.fromStream(streamedResponse);
   }
 
   static Future<http.Response> deleteCart(String provideUrl,

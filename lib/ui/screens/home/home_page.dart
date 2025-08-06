@@ -4,8 +4,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:palm_ecommerce_app/ui/provider/authentication_provider.dart';
-import 'package:palm_ecommerce_app/ui/screens/home/hot_promotion/best_seller.dart';
-import 'package:palm_ecommerce_app/ui/screens/home/hot_promotion/view_all_bestseller.dart';
+import 'package:palm_ecommerce_app/ui/screens/home/hot_promotion/hot_promotion_view.dart';
+import 'package:palm_ecommerce_app/ui/screens/home/hot_promotion/hot_promotion.dart';
 import 'package:palm_ecommerce_app/ui/screens/home/widget/cart_icon.dart';
 import 'package:palm_ecommerce_app/ui/screens/home/category/food_category_list.dart';
 import 'package:palm_ecommerce_app/ui/screens/home/discount/slide_show_dicount_food.dart';
@@ -89,7 +89,6 @@ class _HomePageState extends State<HomePage> {
     final authProvider =
         Provider.of<AuthenticationProvider>(context, listen: false);
     await authProvider.initializeCurrentUser();
-
     if (mounted) {
       setState(() {
         token = authProvider.token;
@@ -299,10 +298,12 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Padding(
+                                Padding(
                                   padding: EdgeInsets.only(bottom: 4),
                                   child: Text(
-                                    'Food Categories',
+                                    AppLocalizations.of(context)
+                                            ?.foodCategory ??
+                                        'Food Categories',
                                     style: TextStyle(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,

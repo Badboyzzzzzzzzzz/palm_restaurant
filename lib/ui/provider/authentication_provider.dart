@@ -1,10 +1,11 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchr
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:palm_ecommerce_app/data/repository/authentication_repository.dart';
+import 'package:palm_ecommerce_app/models/params/profile_param.dart';
 import 'package:palm_ecommerce_app/models/user/user.dart';
 import 'package:palm_ecommerce_app/ui/provider/async_values.dart';
 import 'package:palm_ecommerce_app/ui/widget/bottomNavigator.dart';
@@ -140,9 +141,27 @@ class AuthenticationProvider extends ChangeNotifier {
       _debugLog('User info retrieved successfully: ${userInfo.toJson()}');
       _userInfo = userInfo;
       await _cacheUserInfo(_userInfo!);
+
+      // Ensure language settings are initialized
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        // Check if language is set in SharedPreferences
+        final savedLanguage = prefs.getString('selected_language');
+        if (savedLanguage == null || savedLanguage.isEmpty) {
+          _debugLog('No language preference found, setting default language');
+          // Set default language (English or based on user's settings)
+          await prefs.setString('selected_language', 'en');
+        } else {
+          _debugLog('Found language preference: $savedLanguage');
+        }
+      } catch (e) {
+        _debugLog('Error checking language settings: $e');
+      }
+
       _user = AsyncValue.success(_userInfo);
       notifyListeners();
     } catch (e) {
+      _debugLog('Error getting user info: $e');
       _user = AsyncValue.error(e);
       notifyListeners();
     }
@@ -175,6 +194,21 @@ class AuthenticationProvider extends ChangeNotifier {
       _debugLog('Initializing current user');
       _token = await repository.getCurrentToken();
       _debugLog('Current token: ${_token != null ? "Found" : "Not found"}');
+
+      // Ensure language is set properly
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final savedLanguage = prefs.getString('selected_language');
+        if (savedLanguage == null || savedLanguage.isEmpty) {
+          _debugLog(
+              'No language preference found during initialization, setting default');
+          await prefs.setString('selected_language', 'en');
+        } else {
+          _debugLog('Language already set: $savedLanguage');
+        }
+      } catch (e) {
+        _debugLog('Error checking language settings: $e');
+      }
 
       if (_token != null) {
         final cachedUser = await _loadCachedUserInfo();
@@ -291,7 +325,6 @@ class AuthenticationProvider extends ChangeNotifier {
       if (googleAccessToken == null || googleIdToken == null) {
         throw Exception('Failed to get Google tokens');
       }
-
       _debugLog('Google tokens obtained successfully');
       _debugLog(
           'Access Token: ${googleAccessToken.substring(0, min(googleAccessToken.length, 20))}...');
@@ -469,6 +502,19 @@ class AuthenticationProvider extends ChangeNotifier {
         'idToken': null,
         'email': null,
       };
+    }
+  }
+
+  Future<void> updateUserProfile(ProfileParams params) async {
+    try {
+      await repository.updateUserProfile(params);
+      _debugLog('User profile updated successfully');
+      await getUserInfo();
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+      _debugLog('Error updating user profile: $_error');
+      notifyListeners();
     }
   }
 }

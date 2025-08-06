@@ -2,10 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:palm_ecommerce_app/ui/provider/authentication_provider.dart';
 import 'package:provider/provider.dart';
 
-class ProfilePicture extends StatelessWidget {
+class ProfilePicture extends StatefulWidget {
   const ProfilePicture({
     super.key,
   });
+
+  @override
+  State<ProfilePicture> createState() => _ProfilePictureState();
+}
+
+class _ProfilePictureState extends State<ProfilePicture> {
+  @override
+  void initState() {
+    super.initState();
+    // Use a post-frame callback to avoid context issues during initialization
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<AuthenticationProvider>(context, listen: false).getUserInfo();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthenticationProvider>();

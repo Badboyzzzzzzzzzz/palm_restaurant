@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:palm_ecommerce_app/ui/provider/authentication_provider.dart';
+import 'package:palm_ecommerce_app/ui/provider/language_provider.dart';
 import 'package:palm_ecommerce_app/util/data.dart';
 import 'package:flutter/material.dart';
 import 'package:palm_ecommerce_app/util/themes.dart';
@@ -107,8 +108,16 @@ class _SplashBodyState extends State<SplashBody> with TickerProviderStateMixin {
 
   Future<void> _initializeApp() async {
     try {
-      // Get the authentication provider
+      // Get the providers
       final authProvider = context.read<AuthenticationProvider>();
+      final languageProvider = context.read<LanguageProvider>();
+
+      // Ensure language is initialized first
+      print("Ensuring language is properly initialized");
+      await languageProvider.ensureLanguageInitialized();
+      print(
+          "Language initialized: ${languageProvider.currentLocale.languageCode}");
+
       // Try to get the stored token
       final storedToken = await authProvider.getUserToken();
 

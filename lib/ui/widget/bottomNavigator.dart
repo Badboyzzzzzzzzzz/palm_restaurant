@@ -61,7 +61,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     : greyColor,
               ),
             ),
-            label: AppLocalizations.of(context)!.home,
+            label: AppLocalizations.of(context)?.home ?? 'Home',
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -74,7 +74,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     : greyColor,
               ),
             ),
-            label: AppLocalizations.of(context)!.favorites,
+            label: AppLocalizations.of(context)?.favorites ?? 'Favorites',
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -87,7 +87,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     : greyColor,
               ),
             ),
-            label: AppLocalizations.of(context)!.orders,
+            label: AppLocalizations.of(context)?.orders ?? 'Orders',
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -100,9 +100,9 @@ class _BottomNavBarState extends State<BottomNavBar> {
                     : greyColor,
               ),
             ),
-            label: AppLocalizations.of(context)!.profile,
+            label: AppLocalizations.of(context)?.profile ?? 'My Profile',
           ),
-        ],
+        ],  
       );
     }
 

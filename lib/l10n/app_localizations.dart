@@ -811,16 +811,58 @@ abstract class AppLocalizations {
   /// **'You\'re all caught up! New notifications will appear here.'**
   String get noNotificationsMessage;
 
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Morning'**
   String get goodMorning;
 
+  /// No description provided for @goodAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Afternoon'**
   String get goodAfternoon;
 
+  /// No description provided for @goodEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good Evening'**
   String get goodEvening;
+
+  /// No description provided for @foodCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Food Category'**
   String get foodCategory;
+
+  /// No description provided for @hotPromotion.
+  ///
+  /// In en, this message translates to:
+  /// **'Hot Promotion'**
   String get hotPromotion;
+
+  /// No description provided for @preferLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferred Language'**
   String get preferLangauge;
+
+  /// No description provided for @personInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Personal Information'**
   String get personInfo;
+
+  /// No description provided for @userName.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
   String get userName;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
   String get changePassword;
 }
 

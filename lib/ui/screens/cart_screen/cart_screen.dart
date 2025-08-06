@@ -90,7 +90,7 @@ class _CartScreenState extends State<CartScreen> {
                         Expanded(
                           child: Center(
                             child: Text(
-                              AppLocalizations.of(context)!.cart,
+                              AppLocalizations.of(context)?.cart ?? 'Cart',
                               style: GoogleFonts.leagueSpartan(
                                 fontSize: 24,
                                 letterSpacing: 0.5,
@@ -207,7 +207,7 @@ class _CartScreenState extends State<CartScreen> {
                 onPressed: () {
                   cartProvider.getCart();
                 },
-                child: Text(AppLocalizations.of(context)!.retry),
+                child: Text(AppLocalizations.of(context)?.retry ?? 'Retry'),
               ),
             ],
           ),
@@ -294,7 +294,7 @@ class _CartScreenState extends State<CartScreen> {
                   size: 48, color: Colors.grey),
               const SizedBox(height: 16),
               Text(
-                AppLocalizations.of(context)!.emptyCart,
+                AppLocalizations.of(context)?.emptyCart ?? 'Your cart is empty',
                 style: GoogleFonts.leagueSpartan(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,

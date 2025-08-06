@@ -42,7 +42,6 @@ class _BestSellerItemState extends State<BestSellerItem> {
       },
     );
   }
-
   void addToFavorite() async {
     final favoriteProvider =
         Provider.of<FavoriteProvider>(context, listen: false);

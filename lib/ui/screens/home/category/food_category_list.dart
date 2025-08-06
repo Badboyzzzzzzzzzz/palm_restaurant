@@ -35,7 +35,29 @@ class _FoodCategoryState extends State<FoodCategory> {
         if (state.state == AsyncValueState.loading) {
           return const Center(child: CircularProgressIndicator());
         } else if (state.state == AsyncValueState.error) {
-          return Center(child: Text('Error: ${state.error}'));
+          return Center(
+              child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                'Error loading categories. Please check your connection!',
+                style: TextStyle(color: Colors.black, fontSize: 16),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              ElevatedButton.icon(
+                onPressed: () =>
+                    Provider.of<CategoryProvider>(context, listen: false)
+                        .fetchCategories(),
+                icon: Icon(Icons.refresh),
+                label: Text('Refresh'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                ),
+              ),
+            ],
+          ));
         } else if (state.state == AsyncValueState.success &&
             state.data != null) {
           final categories = state.data!;

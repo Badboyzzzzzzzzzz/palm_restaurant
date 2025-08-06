@@ -41,51 +41,58 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBaRxmjPMAX7FmriOHpW6gYY8gMd4eVEPM',
-    appId: '1:864597870395:android:9ab7fd924a078fd961191e',
-    messagingSenderId: '864597870395',
-    projectId: 'dertam-a445f',
-    storageBucket: 'dertam-a445f.firebasestorage.app',
+    apiKey: 'AIzaSyAobDDgUtGAbbAjWQhCVPaMAhqZ5_J0NyU',
+    appId: '1:81504454499:android:0ed3c220d84e4471f97556',
+    messagingSenderId: '81504454499',
+    projectId: 'race-timer-tracker',
+    databaseURL: 'https://race-timer-tracker-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'race-timer-tracker.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAS_B1OaqXhataSAndnFDOIxQAN8Go-jiA',
-    appId: '1:864597870395:ios:ef6927d9c6effc8c61191e',
-    messagingSenderId: '864597870395',
-    projectId: 'dertam-a445f',
-    storageBucket: 'dertam-a445f.firebasestorage.app',
-    androidClientId: '864597870395-5bjm9ve7cueh3mhjqdnlj4afbrm4s7sv.apps.googleusercontent.com',
-    iosClientId: '864597870395-fij26l13vqjvo1geqtaecuvv6alp04pp.apps.googleusercontent.com',
+    apiKey: 'AIzaSyD-59mgcSiaZxUnQ1bRI3dnSJTeZHTdx9I',
+    appId: '1:81504454499:ios:33bbca6e95034a51f97556',
+    messagingSenderId: '81504454499',
+    projectId: 'race-timer-tracker',
+    databaseURL: 'https://race-timer-tracker-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'race-timer-tracker.firebasestorage.app',
+    androidClientId: '81504454499-cumo388gr4pqub23be5nbjrijkskcnbi.apps.googleusercontent.com',
+    iosClientId: '81504454499-g3nv8on766qn7i93kbo3a2hp398r35nl.apps.googleusercontent.com',
     iosBundleId: 'com.example.tourismApp',
   );
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCh9rOYhPB2olsYsPxh5M1fFJxGu0n0dAE',
-    appId: '1:864597870395:web:7cdc39c1ab38d79c61191e',
-    messagingSenderId: '864597870395',
-    projectId: 'dertam-a445f',
-    authDomain: 'dertam-a445f.firebaseapp.com',
-    storageBucket: 'dertam-a445f.firebasestorage.app',
+    apiKey: 'AIzaSyCgIUI4npXhB4MjLzFRd8fikp6J8qr3ls0',
+    appId: '1:81504454499:web:30bf611a5e5ca0c2f97556',
+    messagingSenderId: '81504454499',
+    projectId: 'race-timer-tracker',
+    authDomain: 'race-timer-tracker.firebaseapp.com',
+    databaseURL: 'https://race-timer-tracker-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'race-timer-tracker.firebasestorage.app',
+    measurementId: 'G-MPDJLJN40E',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAS_B1OaqXhataSAndnFDOIxQAN8Go-jiA',
-    appId: '1:864597870395:ios:ef6927d9c6effc8c61191e',
-    messagingSenderId: '864597870395',
-    projectId: 'dertam-a445f',
-    storageBucket: 'dertam-a445f.firebasestorage.app',
-    androidClientId: '864597870395-5bjm9ve7cueh3mhjqdnlj4afbrm4s7sv.apps.googleusercontent.com',
-    iosClientId: '864597870395-fij26l13vqjvo1geqtaecuvv6alp04pp.apps.googleusercontent.com',
+    apiKey: 'AIzaSyD-59mgcSiaZxUnQ1bRI3dnSJTeZHTdx9I',
+    appId: '1:81504454499:ios:33bbca6e95034a51f97556',
+    messagingSenderId: '81504454499',
+    projectId: 'race-timer-tracker',
+    databaseURL: 'https://race-timer-tracker-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'race-timer-tracker.firebasestorage.app',
+    androidClientId: '81504454499-cumo388gr4pqub23be5nbjrijkskcnbi.apps.googleusercontent.com',
+    iosClientId: '81504454499-g3nv8on766qn7i93kbo3a2hp398r35nl.apps.googleusercontent.com',
     iosBundleId: 'com.example.tourismApp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCh9rOYhPB2olsYsPxh5M1fFJxGu0n0dAE',
-    appId: '1:864597870395:web:f6da6c020cecfc9461191e',
-    messagingSenderId: '864597870395',
-    projectId: 'dertam-a445f',
-    authDomain: 'dertam-a445f.firebaseapp.com',
-    storageBucket: 'dertam-a445f.firebasestorage.app',
+    apiKey: 'AIzaSyCgIUI4npXhB4MjLzFRd8fikp6J8qr3ls0',
+    appId: '1:81504454499:web:30bf611a5e5ca0c2f97556',
+    messagingSenderId: '81504454499',
+    projectId: 'race-timer-tracker',
+    authDomain: 'race-timer-tracker.firebaseapp.com',
+    databaseURL: 'https://race-timer-tracker-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'race-timer-tracker.firebasestorage.app',
+    measurementId: 'G-MPDJLJN40E',
   );
 
 }

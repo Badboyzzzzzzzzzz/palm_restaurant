@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:palm_ecommerce_app/ui/provider/async_values.dart';
 import 'package:palm_ecommerce_app/ui/provider/product_provider.dart';
 import 'package:provider/provider.dart';
-import 'best_seller_item.dart';
+import 'hot_promotion_card.dart';
 
 class BestSeller extends StatelessWidget {
   const BestSeller({
@@ -20,7 +20,11 @@ class BestSeller extends StatelessWidget {
         content = const Center(child: CircularProgressIndicator());
         break;
       case AsyncValueState.error:
-        content = Center(child: Text('Error loading products'));
+        content = Center(
+            child: Text(
+          'Error loading products please check your connection!',
+          style: TextStyle(color: Colors.black, fontSize: 18),
+        ));
         break;
       case AsyncValueState.success:
         content = Column(

@@ -18,7 +18,6 @@ class ProfileScreen extends StatefulWidget {
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
-
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
@@ -30,8 +29,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: primaryBackgroundColor,
         elevation: 0,
         title: Text(
-          AppLocalizations.of(context)!.profile,
-          style: semiBoldText20.copyWith(color: blackColor),
+          AppLocalizations.of(context)?.profile ?? 'Profile',
+          style: semiBoldText20.copyWith(color: Colors.white),
         ),
         actions: [
           Padding(
@@ -73,18 +72,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ProfilePicture(),
               Text(
                 authProvider.user.data?.name ?? "Guest User",
-                style: semiBoldText20.copyWith(color: blackColor),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                ),
                 textAlign: TextAlign.center,
               ),
               Text(
-                authProvider.user.data?.phone ??
-                    AppLocalizations.of(context)!.welcome,
-                style:
-                    regularText14.copyWith(color: blackColor.withOpacity(0.7)),
+                AppLocalizations.of(context)?.welcome ?? 'Welcome',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 18,
+                ),
                 textAlign: TextAlign.center,
               ),
               _buildMenuItem(
-                text: AppLocalizations.of(context)!.profile,
+                text: AppLocalizations.of(context)?.profile ?? 'Profile',
                 icon: Icons.person,
                 iconColor: Colors.indigo,
                 onTap: () {
@@ -93,7 +97,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               _buildMenuItem(
-                text: AppLocalizations.of(context)!.cart,
+                text: AppLocalizations.of(context)?.cart ?? 'Cart',
                 icon: Icons.shopping_cart,
                 iconColor: Colors.blueAccent,
                 onTap: () {
@@ -102,7 +106,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               _buildMenuItem(
-                text: AppLocalizations.of(context)!.about,
+                text: AppLocalizations.of(context)?.about ?? 'About Us',
                 icon: Icons.info_outline,
                 iconColor: Colors.teal,
                 onTap: () {
@@ -111,7 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               _buildMenuItem(
-                text: AppLocalizations.of(context)!.language,
+                text: AppLocalizations.of(context)?.language ?? 'Language',
                 icon: Icons.language,
                 iconColor: Colors.blueGrey,
                 onTap: () {
@@ -120,23 +124,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 },
               ),
               _buildMenuItem(
-                text: AppLocalizations.of(context)!.changePassword,
+                text: AppLocalizations.of(context)?.changePassword ??
+                    'Change Password',
                 icon: Icons.info_outline,
                 iconColor: Colors.teal,
                 onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => const ChangePassword()));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const ChangePassword()));
                 },
               ),
               _buildMenuItem(
-                text: AppLocalizations.of(context)!.help,
+                text: AppLocalizations.of(context)?.help ?? 'Help',
                 icon: Icons.help_outline,
                 iconColor: Colors.blueGrey,
                 onTap: () {},
               ),
               authProvider.token == null
                   ? _buildMenuItem(
-                      text: AppLocalizations.of(context)!.login,
+                      text: AppLocalizations.of(context)?.login ?? 'Login',
                       icon: Icons.login,
                       iconColor: accentColor,
                       onTap: () {
@@ -147,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       },
                     )
                   : _buildMenuItem(
-                      text: AppLocalizations.of(context)!.logout,
+                      text: AppLocalizations.of(context)?.logout ?? 'Logout',
                       icon: Icons.logout,
                       iconColor: Colors.redAccent,
                       onTap: () {
@@ -197,7 +202,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         title: Text(
           text,
-          style: mediumText14.copyWith(color: blackColor),
+          style: TextStyle(
+            fontWeight: FontWeight.normal,
+            fontSize: 16,
+          )
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,

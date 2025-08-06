@@ -9,15 +9,14 @@ class ProfileParams {
   String? dateOfBirth;
   XFile? profile_photo;
 
-  ProfileParams({
-    this.fullName,
-    this.phone,
-    this.email,
-    this.hksId,
-    this.gender,
-    this.dateOfBirth,
-    this.profile_photo
-  });
+  ProfileParams(
+      {this.fullName,
+      this.phone,
+      this.email,
+      this.hksId,
+      this.gender,
+      this.dateOfBirth,
+      this.profile_photo});
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -39,9 +38,8 @@ class ProfileParams {
     if (this.dateOfBirth != null) {
       data['dob'] = this.dateOfBirth;
     }
-    if (this.profile_photo != null) {
-      data['profile_photo'] = this.profile_photo;
-    }
+    // Don't include profile_photo directly in the JSON
+    // File uploads should be handled separately in a multipart request
     return data;
   }
 }

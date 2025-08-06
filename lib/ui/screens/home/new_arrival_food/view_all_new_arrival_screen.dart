@@ -42,7 +42,7 @@ class _NewArrivalScreenState extends State<NewArrivalScreen> {
                   ),
                   const Spacer(),
                   Text(
-                    AppLocalizations.of(context)!.newArrival,
+                    AppLocalizations.of(context)?.newArrival ?? 'New Arrival',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -86,7 +86,6 @@ class _NewArrivalScreenState extends State<NewArrivalScreen> {
                         child: Consumer<ProductProvider>(
                           builder: (context, provider, child) {
                             final products = provider.newArrivalFood;
-
                             switch (products.state) {
                               case AsyncValueState.loading:
                                 return const Center(

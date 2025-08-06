@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:palm_ecommerce_app/ui/screens/auth/login/sign_in_screen.dart';
@@ -7,10 +6,8 @@ import 'package:palm_ecommerce_app/ui/screens/auth/sign_up/verify_otp.dart';
 import 'package:palm_ecommerce_app/util/colors.dart';
 import 'package:palm_ecommerce_app/util/data.dart';
 import 'package:palm_ecommerce_app/ui/provider/authentication_provider.dart';
-
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -187,7 +184,6 @@ class _SignUpFormState extends State<SignUpForm> {
       ),
     );
   }
-
   Future<void> onRegister() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);

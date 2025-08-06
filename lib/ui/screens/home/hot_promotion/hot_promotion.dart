@@ -87,7 +87,7 @@ class _ViewAllBestSellerState extends State<ViewAllBestSeller> {
                   ),
                   const Spacer(),
                   Text(
-                    AppLocalizations.of(context)!.bestSeller,
+                    AppLocalizations.of(context)?.bestSeller ?? 'Best Seller',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
