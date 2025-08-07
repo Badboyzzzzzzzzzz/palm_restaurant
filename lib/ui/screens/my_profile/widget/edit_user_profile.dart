@@ -8,14 +8,12 @@ import 'package:palm_ecommerce_app/util/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
-
 class EditUserProfile extends StatefulWidget {
   const EditUserProfile({super.key});
 
   @override
   State<EditUserProfile> createState() => _EditUserProfileState();
 }
-
 class _EditUserProfileState extends State<EditUserProfile> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
@@ -33,7 +31,6 @@ class _EditUserProfileState extends State<EditUserProfile> {
       _loadUserData();
     });
   }
-
   void _loadUserData() {
     final authProvider = context.read<AuthenticationProvider>();
     final user = authProvider.user.data;
@@ -150,7 +147,7 @@ class _EditUserProfileState extends State<EditUserProfile> {
     );
     if (picked != null) {
       setState(() {
-        _dobController.text = DateFormat('yyyy-MM-dd').format(picked);
+        _dobController.text = DateFormat('yyyy/MM/dd').format(picked);
       });
     }
   }
@@ -170,7 +167,6 @@ class _EditUserProfileState extends State<EditUserProfile> {
         // Log current user data
         print('CURRENT USER: ${currentUser.name}');
         print('CURRENT PROFILE IMAGE: ${currentUser.profileImage}');
-
         // Create ProfileParams without image first
         ProfileParams profileParams = ProfileParams(
           fullName: _nameController.text.trim(),

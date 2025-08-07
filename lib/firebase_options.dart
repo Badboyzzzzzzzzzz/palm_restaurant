@@ -41,58 +41,58 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyAobDDgUtGAbbAjWQhCVPaMAhqZ5_J0NyU',
-    appId: '1:81504454499:android:0ed3c220d84e4471f97556',
-    messagingSenderId: '81504454499',
-    projectId: 'race-timer-tracker',
-    databaseURL: 'https://race-timer-tracker-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'race-timer-tracker.firebasestorage.app',
+    apiKey: 'AIzaSyByJH-dDyQg8wIxO87svS663iLj1qnbBng',
+    appId: '1:78854343895:android:d886ed940c499fe4d43492',
+    messagingSenderId: '78854343895',
+    projectId: 'testlogin-20430',
+    databaseURL: 'https://testlogin-20430-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'testlogin-20430.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyD-59mgcSiaZxUnQ1bRI3dnSJTeZHTdx9I',
-    appId: '1:81504454499:ios:33bbca6e95034a51f97556',
-    messagingSenderId: '81504454499',
-    projectId: 'race-timer-tracker',
-    databaseURL: 'https://race-timer-tracker-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'race-timer-tracker.firebasestorage.app',
-    androidClientId: '81504454499-cumo388gr4pqub23be5nbjrijkskcnbi.apps.googleusercontent.com',
-    iosClientId: '81504454499-g3nv8on766qn7i93kbo3a2hp398r35nl.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCbH_-nM01eWBOQCcoN0xoJGAokDYlfoIk',
+    appId: '1:78854343895:ios:dfdeb0002f2aa9a4d43492',
+    messagingSenderId: '78854343895',
+    projectId: 'testlogin-20430',
+    databaseURL: 'https://testlogin-20430-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'testlogin-20430.firebasestorage.app',
+    androidClientId: '78854343895-4ocu0n5bfkhgedhaphmb2dqg53jlqhud.apps.googleusercontent.com',
+    iosClientId: '78854343895-btvnc64ido9ram312cvaa85f5ccgodpk.apps.googleusercontent.com',
     iosBundleId: 'com.example.tourismApp',
   );
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyCgIUI4npXhB4MjLzFRd8fikp6J8qr3ls0',
-    appId: '1:81504454499:web:30bf611a5e5ca0c2f97556',
-    messagingSenderId: '81504454499',
-    projectId: 'race-timer-tracker',
-    authDomain: 'race-timer-tracker.firebaseapp.com',
-    databaseURL: 'https://race-timer-tracker-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'race-timer-tracker.firebasestorage.app',
-    measurementId: 'G-MPDJLJN40E',
+    apiKey: 'AIzaSyB1PrGKh5cerJvS7PGGDzB5B1_T1934xf0',
+    appId: '1:78854343895:web:376e3df4b860cc81d43492',
+    messagingSenderId: '78854343895',
+    projectId: 'testlogin-20430',
+    authDomain: 'testlogin-20430.firebaseapp.com',
+    databaseURL: 'https://testlogin-20430-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'testlogin-20430.firebasestorage.app',
+    measurementId: 'G-8YZH2Z4KLD',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyD-59mgcSiaZxUnQ1bRI3dnSJTeZHTdx9I',
-    appId: '1:81504454499:ios:33bbca6e95034a51f97556',
-    messagingSenderId: '81504454499',
-    projectId: 'race-timer-tracker',
-    databaseURL: 'https://race-timer-tracker-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'race-timer-tracker.firebasestorage.app',
-    androidClientId: '81504454499-cumo388gr4pqub23be5nbjrijkskcnbi.apps.googleusercontent.com',
-    iosClientId: '81504454499-g3nv8on766qn7i93kbo3a2hp398r35nl.apps.googleusercontent.com',
+    apiKey: 'AIzaSyCbH_-nM01eWBOQCcoN0xoJGAokDYlfoIk',
+    appId: '1:78854343895:ios:dfdeb0002f2aa9a4d43492',
+    messagingSenderId: '78854343895',
+    projectId: 'testlogin-20430',
+    databaseURL: 'https://testlogin-20430-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'testlogin-20430.firebasestorage.app',
+    androidClientId: '78854343895-4ocu0n5bfkhgedhaphmb2dqg53jlqhud.apps.googleusercontent.com',
+    iosClientId: '78854343895-btvnc64ido9ram312cvaa85f5ccgodpk.apps.googleusercontent.com',
     iosBundleId: 'com.example.tourismApp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyCgIUI4npXhB4MjLzFRd8fikp6J8qr3ls0',
-    appId: '1:81504454499:web:30bf611a5e5ca0c2f97556',
-    messagingSenderId: '81504454499',
-    projectId: 'race-timer-tracker',
-    authDomain: 'race-timer-tracker.firebaseapp.com',
-    databaseURL: 'https://race-timer-tracker-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'race-timer-tracker.firebasestorage.app',
-    measurementId: 'G-MPDJLJN40E',
+    apiKey: 'AIzaSyB1PrGKh5cerJvS7PGGDzB5B1_T1934xf0',
+    appId: '1:78854343895:web:4438f8d66e455086d43492',
+    messagingSenderId: '78854343895',
+    projectId: 'testlogin-20430',
+    authDomain: 'testlogin-20430.firebaseapp.com',
+    databaseURL: 'https://testlogin-20430-default-rtdb.asia-southeast1.firebasedatabase.app',
+    storageBucket: 'testlogin-20430.firebasestorage.app',
+    measurementId: 'G-XG4E3SPM81',
   );
 
 }

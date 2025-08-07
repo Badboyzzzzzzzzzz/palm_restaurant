@@ -154,10 +154,10 @@ class _ProfileState extends State<Profile> {
                         clipBehavior: Clip.none,
                         children: [
                           CircleAvatar(
-                      backgroundImage: profileImage != null
-                          ? NetworkImage(profileImage)
-                          : const AssetImage("assets/palmlogo.png"),
-                    ),
+                            backgroundImage: profileImage != null
+                                ? NetworkImage(profileImage)
+                                : const AssetImage("assets/palmlogo.png"),
+                          ),
                           Positioned(
                             right: -16,
                             bottom: 0,
@@ -268,12 +268,12 @@ class _ProfileState extends State<Profile> {
                             value: userInfo?.email ?? "N/A",
                           ),
                           _buildInfoItem(
-                            icon: Icons.email_outlined,
+                            icon: Icons.male_outlined,
                             title: "Gender",
-                            value: userInfo?.gender ?? "N/A",
+                            value: _formatGender(userInfo?.gender),
                           ),
                           _buildInfoItem(
-                            icon: Icons.email_outlined,
+                            icon: Icons.date_range,
                             title: "Date of Birth",
                             value: userInfo?.dob ?? "N/A",
                           ),
@@ -289,6 +289,28 @@ class _ProfileState extends State<Profile> {
         ],
       ),
     );
+  }
+
+  String _formatGender(String? gender) {
+    if (gender == null) return "N/A";
+    String lowerGender = gender.toLowerCase();
+    if (lowerGender == "male" ||
+        lowerGender == "female" ||
+        lowerGender == "other") {
+      return gender[0].toUpperCase() + gender.substring(1).toLowerCase();
+    }
+
+    switch (gender) {
+      case "1":
+        return "Male";
+      case "2":
+        return "Female";
+      case "0":
+      case "3":
+        return "Other";
+      default:
+        return gender;
+    }
   }
 
   Widget _buildInfoItem({

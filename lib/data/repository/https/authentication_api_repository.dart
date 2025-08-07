@@ -24,7 +24,6 @@ class AuthenticationApiRepository extends AuthenticationRepository {
     'Accept': 'application/json',
     'Content-Type': 'application/json',
   };
-
   // Debug helper method
   void _debugLog(String message) {
     debugPrint('🔐 AuthRepository: $message');
@@ -471,57 +470,71 @@ class AuthenticationApiRepository extends AuthenticationRepository {
   @override
   Future<void> updateUserProfile(ProfileParams params) async {
     try {
+      _logger.info('Updating user profile');
       final token = await getCurrentToken();
       if (token.isEmpty) {
         throw Exception('No authentication token available');
       }
 
-      // Use different request method based on whether we have a file to upload
       http.Response response;
-      if (params.profile_photo != null) {
-        // Use multipart request for file upload
-        var url = Uri.https(FetchingData.baseUrl.replaceAll('https://', ''),
-            ApiConstant.updateProfile);
+
+      // Check if we need to handle file upload
+      if (params.hasProfilePhotoUpdate()) {
+        _logger.info('Profile update includes photo upload');
+
+        // Create multipart request for file upload
+        var baseUrl = FetchingData.baseUrl
+            .replaceAll('https://', '')
+            .replaceAll('http://', '');
+        var url = Uri.https(baseUrl, ApiConstant.updateProfile);
         var request = http.MultipartRequest('POST', url);
 
-        // Add file
-        var profileImage = await http.MultipartFile.fromPath(
-            'profile_photo', params.profile_photo!.path);
-        request.files.add(profileImage);
+        // Add auth headers (strip content-type as it's set by multipart)
+        var headers = _getAuthHeaders(token);
+        headers.remove('Content-Type'); // Remove content-type for multipart
+        request.headers.addAll(headers);
 
-        // Add headers
-        request.headers.addAll(_getAuthHeaders(token));
+        // Add the profile photo file
+        _logger
+            .info('Adding profile photo from: ${params.profile_photo!.path}');
+        request.files.add(await http.MultipartFile.fromPath(
+          'profile_photo', // Field name expected by the server
+          params.profile_photo!.path,
+        ));
 
-        // Add all other fields
+        // Add all other fields from params
         var jsonData = params.toJson();
         jsonData.forEach((key, value) {
-          if (value != null) {
-            request.fields[key] = value.toString();
-          }
+          _logger.info('Adding form field: $key = $value');
+          request.fields[key] = value.toString();
         });
 
-        // Send request
+        // Send the multipart request
+        _logger.info('Sending multipart request to: $url');
         var streamedResponse = await request.send();
         response = await http.Response.fromStream(streamedResponse);
       } else {
         // Use regular request if no file to upload
+        _logger.info('Profile update without photo upload');
         response = await FetchingData.postHeader(
           ApiConstant.updateProfile,
           _getAuthHeaders(token),
           params.toJson(),
         );
       }
+
       _logger
           .info('Update profile response status code: ${response.statusCode}');
       _logger.info('Update profile response body: ${response.body}');
+
       if (response.statusCode == 200) {
-        _logger.info('User profile updated successfully');
-        return;
+        _logger.info('Profile updated successfully');
+      } else {
+        throw _handleErrorResponse(response, 'Update profile');
       }
-      throw _handleErrorResponse(response, 'Update profile');
     } catch (e) {
-      _logger.severe('Update profile error: $e');
-      rethrow;
+      _logger.severe('Error updating profile: $e');
+      throw Exception(e);
     }
   }
 }

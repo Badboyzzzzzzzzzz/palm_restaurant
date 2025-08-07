@@ -1,5 +1,4 @@
 import 'package:image_picker/image_picker.dart';
-
 class ProfileParams {
   String? fullName;
   String? phone;
@@ -8,38 +7,67 @@ class ProfileParams {
   String? gender;
   String? dateOfBirth;
   XFile? profile_photo;
-
-  ProfileParams(
-      {this.fullName,
-      this.phone,
-      this.email,
-      this.hksId,
-      this.gender,
-      this.dateOfBirth,
-      this.profile_photo});
-
+  ProfileParams({
+    this.fullName,
+    this.phone,
+    this.email,
+    this.hksId,
+    this.gender,
+    this.dateOfBirth,
+    this.profile_photo,
+  });
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.fullName != null) {
-      data['name'] = this.fullName;
+    final Map<String, dynamic> data = <String, dynamic>{};
+
+    if (fullName != null) {
+      data['name'] = fullName;
     }
-    if (this.phone != null) {
-      data['phone'] = this.phone;
+
+    if (phone != null) {
+      data['phone'] = phone;
     }
-    if (this.email != null) {
-      data['email'] = this.email;
+
+    if (email != null) {
+      data['email'] = email;
     }
-    if (this.hksId != null) {
-      data['hks_id'] = this.hksId;
+
+    if (hksId != null) {
+      data['hks_id'] = hksId;
     }
-    if (this.gender != null) {
-      data['gender'] = this.gender;
+
+    if (gender != null) {
+      if (gender == 'Male') {
+        data['gender'] = '1';
+      } else if (gender == 'Female') {
+        data['gender'] = '2';
+      } else {
+        data['gender'] = gender;
+      }
     }
-    if (this.dateOfBirth != null) {
-      data['dob'] = this.dateOfBirth;
+
+    if (dateOfBirth != null) {
+      try {
+        if (dateOfBirth!.contains('-')) {
+          final parts = dateOfBirth!.split('-');
+          if (parts.length == 3) {
+            data['dob'] = '${parts[1]}/${parts[2]}/${parts[0]}';
+          } else {
+            data['dob'] = dateOfBirth;
+          }
+        } else {
+          data['dob'] = dateOfBirth;
+        }
+      } catch (e) {
+        data['dob'] = dateOfBirth;
+      }
     }
-    // Don't include profile_photo directly in the JSON
-    // File uploads should be handled separately in a multipart request
     return data;
+  }
+  bool hasProfilePhotoUpdate() {
+    return profile_photo != null;
+  }
+  Future<Map<String, dynamic>> toMultipartRequestFields() async {
+    final Map<String, dynamic> formFields = toJson();
+    return formFields;
   }
 }
