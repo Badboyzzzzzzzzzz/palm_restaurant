@@ -1,4 +1,4 @@
-import 'package:palm_ecommerce_app/data/dto/cart_dto.dart';
+import 'package:palm_ecommerce_app/data/dto/cart_dto/cart_dto.dart';
 import 'package:palm_ecommerce_app/data/network/api_endpoints.dart';
 import 'package:palm_ecommerce_app/data/network/fetchingdata.dart';
 import 'package:palm_ecommerce_app/data/repository/authentication_repository.dart';
@@ -115,7 +115,6 @@ class CartApiRepository extends CartRepository {
       return CartDto.fromJson({'item': []});
     }
   }
-
   @override
   Future<void> clearCart() async {
     try {

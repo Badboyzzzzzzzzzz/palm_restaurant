@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:palm_ecommerce_app/data/repository/favorite_repository.dart';
-import 'package:palm_ecommerce_app/models/favorite/favourite.dart';
+import 'package:palm_ecommerce_app/models/favorite/favorite_response.dart';
 import 'package:palm_ecommerce_app/ui/provider/async_values.dart';
 
 class FavoriteProvider extends ChangeNotifier {
@@ -14,8 +14,6 @@ class FavoriteProvider extends ChangeNotifier {
   String? get lastError => _lastError;
   final Set<String> _recentlyToggledProductIds = {};
   Set<String> get recentlyToggledProductIds => _recentlyToggledProductIds;
-
-  // Add a set to track locally favorited products for immediate UI updates
   final Set<String> _localFavorites = {};
   Set<String> get localFavorites => _localFavorites;
 

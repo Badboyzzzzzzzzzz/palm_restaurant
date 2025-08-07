@@ -61,99 +61,99 @@ class PaymentMethodApiRepository implements PaymentMethodRepository {
     }
   }
 
-  @override
-  Future<CheckoutABAModel> getKhqrDeeplink({required String orderId}) async {
-    try {
-      final token = await repository.getCurrentToken();
-      print(
-          "DEBUG: Token for KHQR deeplink: ${token.isNotEmpty ? 'Available' : 'Empty'}");
+  // @override
+  // Future<CheckoutABAModel> getKhqrDeeplink({required String orderId}) async {
+  //   try {
+  //     final token = await repository.getCurrentToken();
+  //     print(
+  //         "DEBUG: Token for KHQR deeplink: ${token.isNotEmpty ? 'Available' : 'Empty'}");
 
-      if (token.isEmpty) {
-        throw Exception(
-            'No authentication token available. Please login first.');
-      }
+  //     if (token.isEmpty) {
+  //       throw Exception(
+  //           'No authentication token available. Please login first.');
+  //     }
     
-      final response = await FetchingData.getDataPar(
-        ApiConstant.getKhqrDeeplink,
-        {'order_id': orderId},
-        _getAuthHeaders(token),
-      );
+  //     final response = await FetchingData.getDataPar(
+  //       ApiConstant.getKhqrDeeplink,
+  //       {'order_id': orderId},
+  //       _getAuthHeaders(token),
+  //     );
 
-      print("DEBUG: KHQR deeplink response status: ${response.statusCode}");
-      print("DEBUG: KHQR deeplink response body: ${response.body}");
+  //     print("DEBUG: KHQR deeplink response status: ${response.statusCode}");
+  //     print("DEBUG: KHQR deeplink response body: ${response.body}");
 
-      if (response.statusCode == 200) {
-        final jsonData = json.decode(response.body);
-        print("DEBUG: KHQR deeplink parsed JSON: $jsonData");
+  //     if (response.statusCode == 200) {
+  //       final jsonData = json.decode(response.body);
+  //       print("DEBUG: KHQR deeplink parsed JSON: $jsonData");
 
-        if (jsonData['success'] == true &&
-            jsonData['status'] == 200 &&
-            jsonData['data'] != null) {
-          print("DEBUG: Using standard response format for KHQR");
-          try {
-            if (jsonData['data']['lifetime'] != null) {
-              print(
-                  "DEBUG: lifetime field type: ${jsonData['data']['lifetime'].runtimeType}, value: ${jsonData['data']['lifetime']}");
-            }
+  //       if (jsonData['success'] == true &&
+  //           jsonData['status'] == 200 &&
+  //           jsonData['data'] != null) {
+  //         print("DEBUG: Using standard response format for KHQR");
+  //         try {
+  //           if (jsonData['data']['lifetime'] != null) {
+  //             print(
+  //                 "DEBUG: lifetime field type: ${jsonData['data']['lifetime'].runtimeType}, value: ${jsonData['data']['lifetime']}");
+  //           }
 
-            return CheckoutABAModel.fromJson(jsonData['data']);
-          } catch (e) {
-            print("DEBUG: Error parsing CheckoutABAModel: $e");
-            final sanitizedData = Map<String, dynamic>.from(jsonData['data']);
-            if (sanitizedData['lifetime'] != null) {
-              if (sanitizedData['lifetime'] is! int) {
-                try {
-                  sanitizedData['lifetime'] =
-                      int.parse(sanitizedData['lifetime'].toString());
-                } catch (_) {
-                  sanitizedData['lifetime'] = 180;
-                }
-              }
-            } else {
-              sanitizedData['lifetime'] = 180;
-            }
-            return CheckoutABAModel.fromJson(sanitizedData);
-          }
-        } else if (jsonData['data'] != null) {
-          print("DEBUG: Using legacy response format for KHQR");
-          try {
-            if (jsonData['data']['lifetime'] != null) {
-              print(
-                  "DEBUG: lifetime field type: ${jsonData['data']['lifetime'].runtimeType}, value: ${jsonData['data']['lifetime']}");
-            }
+  //           return CheckoutABAModel.fromJson(jsonData['data']);
+  //         } catch (e) {
+  //           print("DEBUG: Error parsing CheckoutABAModel: $e");
+  //           final sanitizedData = Map<String, dynamic>.from(jsonData['data']);
+  //           if (sanitizedData['lifetime'] != null) {
+  //             if (sanitizedData['lifetime'] is! int) {
+  //               try {
+  //                 sanitizedData['lifetime'] =
+  //                     int.parse(sanitizedData['lifetime'].toString());
+  //               } catch (_) {
+  //                 sanitizedData['lifetime'] = 180;
+  //               }
+  //             }
+  //           } else {
+  //             sanitizedData['lifetime'] = 180;
+  //           }
+  //           return CheckoutABAModel.fromJson(sanitizedData);
+  //         }
+  //       } else if (jsonData['data'] != null) {
+  //         print("DEBUG: Using legacy response format for KHQR");
+  //         try {
+  //           if (jsonData['data']['lifetime'] != null) {
+  //             print(
+  //                 "DEBUG: lifetime field type: ${jsonData['data']['lifetime'].runtimeType}, value: ${jsonData['data']['lifetime']}");
+  //           }
 
-            return CheckoutABAModel.fromJson(jsonData['data']);
-          } catch (e) {
-            print("DEBUG: Error parsing CheckoutABAModel: $e");
-            final sanitizedData = Map<String, dynamic>.from(jsonData['data']);
-            if (sanitizedData['lifetime'] != null) {
-              if (sanitizedData['lifetime'] is! int) {
-                try {
-                  sanitizedData['lifetime'] =
-                      int.parse(sanitizedData['lifetime'].toString());
-                } catch (_) {
-                  sanitizedData['lifetime'] = 180;
-                }
-              }
-            } else {
-              sanitizedData['lifetime'] = 180;
-            }
-            return CheckoutABAModel.fromJson(sanitizedData);
-          }
-        } else {
-          print("DEBUG: Invalid response format for KHQR: $jsonData");
-          throw Exception('Invalid response format for KHQR deeplink');
-        }
-      } else {
-        print(
-            "DEBUG: Failed to get KHQR deeplink with status: ${response.statusCode}");
-        throw Exception('Failed to get KHQR deeplink');
-      }
-    } catch (e) {
-      print("DEBUG: Exception in getKhqrDeeplink: $e");
-      rethrow;
-    }
-  }
+  //           return CheckoutABAModel.fromJson(jsonData['data']);
+  //         } catch (e) {
+  //           print("DEBUG: Error parsing CheckoutABAModel: $e");
+  //           final sanitizedData = Map<String, dynamic>.from(jsonData['data']);
+  //           if (sanitizedData['lifetime'] != null) {
+  //             if (sanitizedData['lifetime'] is! int) {
+  //               try {
+  //                 sanitizedData['lifetime'] =
+  //                     int.parse(sanitizedData['lifetime'].toString());
+  //               } catch (_) {
+  //                 sanitizedData['lifetime'] = 180;
+  //               }
+  //             }
+  //           } else {
+  //             sanitizedData['lifetime'] = 180;
+  //           }
+  //           return CheckoutABAModel.fromJson(sanitizedData);
+  //         }
+  //       } else {
+  //         print("DEBUG: Invalid response format for KHQR: $jsonData");
+  //         throw Exception('Invalid response format for KHQR deeplink');
+  //       }
+  //     } else {
+  //       print(
+  //           "DEBUG: Failed to get KHQR deeplink with status: ${response.statusCode}");
+  //       throw Exception('Failed to get KHQR deeplink');
+  //     }
+  //   } catch (e) {
+  //     print("DEBUG: Exception in getKhqrDeeplink: $e");
+  //     rethrow;
+  //   }
+  // }
 
   @override
   Future<CheckTransactionModel> checkTransaction(

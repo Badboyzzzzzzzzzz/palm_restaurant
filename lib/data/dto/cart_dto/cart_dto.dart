@@ -1,5 +1,5 @@
 import 'package:palm_ecommerce_app/models/cart/cart.dart';
-import 'package:palm_ecommerce_app/data/dto/cart_item_dto.dart';
+import 'package:palm_ecommerce_app/data/dto/cart_dto/cart_item_dto.dart';
 
 class CartDto {
   static CartModel fromJson(Map<String, dynamic> json) {
@@ -12,7 +12,6 @@ class CartDto {
           .map<CartProductItem>((x) => CartItemDto.fromJson(x))
           .toList();
     }
-
     return CartModel(
       item: items,
       countCart: json['count_cart'] ?? 0,

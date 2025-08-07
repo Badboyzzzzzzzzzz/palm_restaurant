@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:palm_ecommerce_app/data/Network/fetchingdata.dart';
+import 'package:palm_ecommerce_app/data/dto/checkout_dto/checkout_dto.dart';
 import 'package:palm_ecommerce_app/data/network/api_endpoints.dart';
 import 'package:palm_ecommerce_app/data/repository/checkout_repository.dart';
 import 'package:palm_ecommerce_app/data/repository/https/authentication_api_repository.dart';
@@ -45,14 +46,13 @@ class CheckoutApiRepository implements CheckoutRepository {
         throw Exception('Failed to get checkout info: ${response.body}');
       }
       final Map<String, dynamic> data = json.decode(response.body);
-      final checkoutModel = CheckoutModel.fromJson(data['data']);
+      final checkoutModel = CheckoutDto.fromJson(data['data']);
       return checkoutModel;
     } catch (e) {
       print('Error getting checkout info: $e');
       throw Exception('Error getting checkout info: $e');
     }
   }
-
   @override
   Future<List<PaymentMethodModel>> getPaymentMethods() async {
     try {

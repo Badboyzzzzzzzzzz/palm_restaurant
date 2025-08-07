@@ -2,7 +2,6 @@ class CartModel {
   List<CartProductItem> item = [];
   int? countCart;
   String? totalPrice;
-
   CartModel({
     required this.item,
     this.countCart,
@@ -13,7 +12,6 @@ class CartModel {
     return item.fold(
         0, (total, item) => total + double.parse(item.price ?? '0'));
   }
-
   // Item count
   int get itemCount {
     return item.fold(0, (total, item) => total + int.parse(item.qty ?? '0'));

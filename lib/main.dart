@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:palm_ecommerce_app/util/app_them.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -9,7 +10,6 @@ import 'package:palm_ecommerce_app/firebase_options.dart';
 import 'package:palm_ecommerce_app/l10n/app_localizations.dart';
 import 'package:palm_ecommerce_app/ui/screens/splash/spalsh_screen.dart';
 import 'package:palm_ecommerce_app/theme/theme_config.dart';
-import 'package:palm_ecommerce_app/app_model/app_them.dart';
 
 // Providers
 import 'package:palm_ecommerce_app/ui/provider/language_provider.dart';

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:logging/logging.dart';
-import 'package:palm_ecommerce_app/data/dto/product_category_dto.dart';
-import 'package:palm_ecommerce_app/data/dto/sub_category.dart';
+import 'package:palm_ecommerce_app/data/dto/category_dto/main_category_dto.dart';
+import 'package:palm_ecommerce_app/data/dto/category_dto/sub_category.dart';
 import 'package:palm_ecommerce_app/data/network/fetchingdata.dart';
 import 'package:palm_ecommerce_app/data/repository/category_repository.dart';
 import 'package:palm_ecommerce_app/data/repository/https/authentication_api_repository.dart';

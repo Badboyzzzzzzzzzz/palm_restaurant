@@ -1,9 +1,12 @@
 import 'dart:convert';
 
 import 'package:palm_ecommerce_app/data/Network/fetchingdata.dart';
+import 'package:palm_ecommerce_app/data/dto/favorite_dto/favorite_dto.dart';
+import 'package:palm_ecommerce_app/data/dto/favorite_dto/favorite_response_dto.dart';
 import 'package:palm_ecommerce_app/data/network/api_endpoints.dart';
 import 'package:palm_ecommerce_app/data/repository/favorite_repository.dart';
 import 'package:palm_ecommerce_app/data/repository/https/authentication_api_repository.dart';
+import 'package:palm_ecommerce_app/models/favorite/favorite_response.dart';
 import 'package:palm_ecommerce_app/models/favorite/favourite.dart';
 
 class FavoriteApiRepository implements FavoriteRepository {
@@ -36,7 +39,7 @@ class FavoriteApiRepository implements FavoriteRepository {
       );
       if (response.statusCode == 200) {
         final Map<String, dynamic> responseData = json.decode(response.body);
-        return FavouriteModel.fromJson(responseData);
+        return FavoriteDto.fromJson(responseData);
       } else {
         throw Exception('Failed to add item to favorites: ${response.body}');
       }
@@ -70,7 +73,7 @@ class FavoriteApiRepository implements FavoriteRepository {
       }
 
       final Map<String, dynamic> responseData = json.decode(response.body);
-      return FavouriteResponse.fromJson(responseData);
+      return FavoriteResponseDto.fromJson(responseData);
     } catch (e) {
       print('Error fetching favorite products: $e');
       throw Exception('Error fetching favorite products: $e');

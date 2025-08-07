@@ -11,7 +11,6 @@ class CategoryDTO {
       'mainCategoryName': category.mainCategoryName,
     };
   }
-
   // Create Category model from JSON
   static MainCategoryModel fromJson(Map<String, dynamic> json) {
     return MainCategoryModel(

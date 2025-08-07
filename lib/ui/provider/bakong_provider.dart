@@ -6,30 +6,24 @@ class BakongProvider extends ChangeNotifier {
   final BakongRepository bakongRepository;
 
   BakongProvider({required this.bakongRepository});
-
   // Payment verification state
   AsyncValue<bool> _paymentVerification = AsyncValue.empty();
   AsyncValue<bool> get paymentVerification => _paymentVerification;
-
   // Order status update state
   AsyncValue<bool> _orderStatusUpdate = AsyncValue.empty();
   AsyncValue<bool> get orderStatusUpdate => _orderStatusUpdate;
-
   // Verification attempts tracking
   int _verificationAttempts = 0;
   int get verificationAttempts => _verificationAttempts;
-
   // Last error message
   String _lastErrorMessage = '';
   String get lastErrorMessage => _lastErrorMessage;
-
   // Verify payment using MD5 hash
   Future<void> verifyPayment(String md5) async {
     _paymentVerification = AsyncValue.loading();
     _verificationAttempts++;
     _lastErrorMessage = '';
     notifyListeners();
-
     try {
       debugPrint('Attempting to verify payment with MD5: $md5');
       final isVerified = await bakongRepository.verifyMd5(md5);
