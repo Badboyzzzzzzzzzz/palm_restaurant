@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:palm_ecommerce_app/l10n/app_localizations.dart';
 import 'package:palm_ecommerce_app/ui/provider/async_values.dart';
 import 'package:palm_ecommerce_app/ui/screens/my_profile/widget/edit_user_profile.dart';
-import 'package:palm_ecommerce_app/ui/screens/my_profile/widget/profile_picture.dart';
 import 'package:palm_ecommerce_app/util/data.dart';
 import 'package:palm_ecommerce_app/util/themes.dart';
 import 'package:palm_ecommerce_app/ui/provider/authentication_provider.dart';
@@ -40,6 +39,7 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthenticationProvider>();
     final userState = authProvider.user;
+    final profileImage = authProvider.user.data?.profileImage;
     // Check if data is still loading
     if (userState.state == AsyncValueState.loading) {
       return Scaffold(
@@ -145,7 +145,42 @@ class _ProfileState extends State<Profile> {
                 child: Column(
                   children: [
                     SizedBox(height: 20),
-                    Center(child: ProfilePicture()),
+                    Center(
+                        child: SizedBox(
+                      height: 115,
+                      width: 115,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        clipBehavior: Clip.none,
+                        children: [
+                          CircleAvatar(
+                      backgroundImage: profileImage != null
+                          ? NetworkImage(profileImage)
+                          : const AssetImage("assets/palmlogo.png"),
+                    ),
+                          Positioned(
+                            right: -16,
+                            bottom: 0,
+                            child: SizedBox(
+                              height: 46,
+                              width: 46,
+                              child: TextButton(
+                                style: TextButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                    side: const BorderSide(color: Colors.white),
+                                  ),
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: const Color(0xFFF5F6F9),
+                                ),
+                                onPressed: () {},
+                                child: Image.asset("assets/camera-outline.png"),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )),
                     SizedBox(height: 20),
                     Container(
                       decoration: BoxDecoration(

@@ -141,7 +141,6 @@ class MyApp extends StatelessWidget {
       },
     );
   }
-
   ThemeData _themeData(ThemeData theme) {
     return theme.copyWith(
       textTheme: GoogleFonts.sourceSerif4TextTheme(theme.textTheme).apply(

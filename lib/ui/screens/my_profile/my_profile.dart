@@ -2,7 +2,6 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:palm_ecommerce_app/ui/provider/authentication_provider.dart';
-import 'package:palm_ecommerce_app/ui/screens/my_profile/widget/profile_picture.dart';
 import 'package:palm_ecommerce_app/ui/screens/my_profile/widget/aboutUs.dart';
 import 'package:palm_ecommerce_app/ui/screens/my_profile/widget/language_selection_screen.dart';
 import 'package:flutter/material.dart';
@@ -13,15 +12,18 @@ import 'package:palm_ecommerce_app/ui/screens/my_profile/widget/change_password.
 import 'package:palm_ecommerce_app/util/themes.dart';
 import 'package:provider/provider.dart';
 import 'package:palm_ecommerce_app/l10n/app_localizations.dart';
+
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
+
 class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthenticationProvider>();
+    final profileImage = authProvider.user.data?.profileImage;
 
     return Scaffold(
       appBar: AppBar(
@@ -69,7 +71,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              ProfilePicture(),
+              SizedBox(
+                height: 115,
+                width: 115,
+                child: Stack(
+                  fit: StackFit.expand,
+                  clipBehavior: Clip.none,
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: profileImage != null
+                          ? NetworkImage(profileImage)
+                          : const AssetImage("assets/palmlogo.png"),
+                    ),
+                    Positioned(
+                      right: -16,
+                      bottom: 0,
+                      child: SizedBox(
+                        height: 46,
+                        width: 46,
+                        child: TextButton(
+                          style: TextButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                              side: const BorderSide(color: Colors.white),
+                            ),
+                            foregroundColor: Colors.white,
+                            backgroundColor: const Color(0xFFF5F6F9),
+                          ),
+                          onPressed: () {},
+                          child: Image.asset("assets/camera-outline.png"),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
               Text(
                 authProvider.user.data?.name ?? "Guest User",
                 style: TextStyle(
@@ -200,13 +236,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             size: 24,
           ),
         ),
-        title: Text(
-          text,
-          style: TextStyle(
-            fontWeight: FontWeight.normal,
-            fontSize: 16,
-          )
-        ),
+        title: Text(text,
+            style: TextStyle(
+              fontWeight: FontWeight.normal,
+              fontSize: 16,
+            )),
         trailing: Icon(
           Icons.arrow_forward_ios,
           size: 16,
