@@ -40,59 +40,54 @@ class DefaultFirebaseOptions {
     }
   }
 
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyBdBgw3MU1cSHE4NvR1qEyLhuBmqBjEHV8',
+    appId: '1:676059955468:web:8e9402d3fa5f2727d90929',
+    messagingSenderId: '676059955468',
+    projectId: 'palm-restaurant',
+    authDomain: 'palm-restaurant.firebaseapp.com',
+    storageBucket: 'palm-restaurant.firebasestorage.app',
+    measurementId: 'G-VKMLXBC42T',
+  );
+
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyByJH-dDyQg8wIxO87svS663iLj1qnbBng',
-    appId: '1:78854343895:android:d886ed940c499fe4d43492',
-    messagingSenderId: '78854343895',
-    projectId: 'testlogin-20430',
-    databaseURL: 'https://testlogin-20430-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'testlogin-20430.firebasestorage.app',
+    apiKey: 'AIzaSyDBI1x6ZUk1pUy6SfhQaENfYRe4xZYh8o0',
+    appId: '1:676059955468:android:13724de6e435ff61d90929',
+    messagingSenderId: '676059955468',
+    projectId: 'palm-restaurant',
+    storageBucket: 'palm-restaurant.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCbH_-nM01eWBOQCcoN0xoJGAokDYlfoIk',
-    appId: '1:78854343895:ios:dfdeb0002f2aa9a4d43492',
-    messagingSenderId: '78854343895',
-    projectId: 'testlogin-20430',
-    databaseURL: 'https://testlogin-20430-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'testlogin-20430.firebasestorage.app',
-    androidClientId: '78854343895-4ocu0n5bfkhgedhaphmb2dqg53jlqhud.apps.googleusercontent.com',
-    iosClientId: '78854343895-btvnc64ido9ram312cvaa85f5ccgodpk.apps.googleusercontent.com',
+    apiKey: 'AIzaSyA4WxXdHSKwWs-M-nwkJF_p-UVyIL1Bc2c',
+    appId: '1:676059955468:ios:d63773cbdb1ffcc0d90929',
+    messagingSenderId: '676059955468',
+    projectId: 'palm-restaurant',
+    storageBucket: 'palm-restaurant.firebasestorage.app',
+    androidClientId: '676059955468-thku2gucjq7i7h6qrcmhsca0c2s8lqma.apps.googleusercontent.com',
+    iosClientId: '676059955468-4l462qip2cqlpfmskrlo2go34dfvtvku.apps.googleusercontent.com',
     iosBundleId: 'com.example.tourismApp',
   );
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyB1PrGKh5cerJvS7PGGDzB5B1_T1934xf0',
-    appId: '1:78854343895:web:376e3df4b860cc81d43492',
-    messagingSenderId: '78854343895',
-    projectId: 'testlogin-20430',
-    authDomain: 'testlogin-20430.firebaseapp.com',
-    databaseURL: 'https://testlogin-20430-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'testlogin-20430.firebasestorage.app',
-    measurementId: 'G-8YZH2Z4KLD',
-  );
-
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCbH_-nM01eWBOQCcoN0xoJGAokDYlfoIk',
-    appId: '1:78854343895:ios:dfdeb0002f2aa9a4d43492',
-    messagingSenderId: '78854343895',
-    projectId: 'testlogin-20430',
-    databaseURL: 'https://testlogin-20430-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'testlogin-20430.firebasestorage.app',
-    androidClientId: '78854343895-4ocu0n5bfkhgedhaphmb2dqg53jlqhud.apps.googleusercontent.com',
-    iosClientId: '78854343895-btvnc64ido9ram312cvaa85f5ccgodpk.apps.googleusercontent.com',
+    apiKey: 'AIzaSyA4WxXdHSKwWs-M-nwkJF_p-UVyIL1Bc2c',
+    appId: '1:676059955468:ios:d63773cbdb1ffcc0d90929',
+    messagingSenderId: '676059955468',
+    projectId: 'palm-restaurant',
+    storageBucket: 'palm-restaurant.firebasestorage.app',
+    androidClientId: '676059955468-thku2gucjq7i7h6qrcmhsca0c2s8lqma.apps.googleusercontent.com',
+    iosClientId: '676059955468-4l462qip2cqlpfmskrlo2go34dfvtvku.apps.googleusercontent.com',
     iosBundleId: 'com.example.tourismApp',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyB1PrGKh5cerJvS7PGGDzB5B1_T1934xf0',
-    appId: '1:78854343895:web:4438f8d66e455086d43492',
-    messagingSenderId: '78854343895',
-    projectId: 'testlogin-20430',
-    authDomain: 'testlogin-20430.firebaseapp.com',
-    databaseURL: 'https://testlogin-20430-default-rtdb.asia-southeast1.firebasedatabase.app',
-    storageBucket: 'testlogin-20430.firebasestorage.app',
-    measurementId: 'G-XG4E3SPM81',
+    apiKey: 'AIzaSyBdBgw3MU1cSHE4NvR1qEyLhuBmqBjEHV8',
+    appId: '1:676059955468:web:92c0dbe1ad24ae06d90929',
+    messagingSenderId: '676059955468',
+    projectId: 'palm-restaurant',
+    authDomain: 'palm-restaurant.firebaseapp.com',
+    storageBucket: 'palm-restaurant.firebasestorage.app',
+    measurementId: 'G-BPNJ69N6QT',
   );
 
 }

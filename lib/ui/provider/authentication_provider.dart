@@ -1,17 +1,12 @@
 // ignore_for_file: use_build_context_synchr
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:palm_ecommerce_app/data/repository/authentication_repository.dart';
 import 'package:palm_ecommerce_app/models/params/profile_param.dart';
 import 'package:palm_ecommerce_app/models/user/user.dart';
 import 'package:palm_ecommerce_app/ui/provider/async_values.dart';
-import 'package:palm_ecommerce_app/ui/widget/bottomNavigator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'dart:math' show min;
 
 class AuthenticationProvider extends ChangeNotifier {
   final AuthenticationRepository repository;
@@ -157,7 +152,6 @@ class AuthenticationProvider extends ChangeNotifier {
       } catch (e) {
         _debugLog('Error checking language settings: $e');
       }
-
       _user = AsyncValue.success(_userInfo);
       notifyListeners();
     } catch (e) {
@@ -194,8 +188,6 @@ class AuthenticationProvider extends ChangeNotifier {
       _debugLog('Initializing current user');
       _token = await repository.getCurrentToken();
       _debugLog('Current token: ${_token != null ? "Found" : "Not found"}');
-
-      // Ensure language is set properly
       try {
         final prefs = await SharedPreferences.getInstance();
         final savedLanguage = prefs.getString('selected_language');
@@ -209,7 +201,6 @@ class AuthenticationProvider extends ChangeNotifier {
       } catch (e) {
         _debugLog('Error checking language settings: $e');
       }
-
       if (_token != null) {
         final cachedUser = await _loadCachedUserInfo();
         if (cachedUser != null) {
@@ -303,86 +294,57 @@ class AuthenticationProvider extends ChangeNotifier {
     _debugLog('----------------------');
   }
 
+  Future<void> googleLogin() async {
+    await repository.signInWithGoogle();
+    notifyListeners();
+  }
+
   Future<void> signInWithGoogle(BuildContext context) async {
     try {
       _debugLog('Starting Google Sign In process');
       final GoogleSignInAccount? googleUser =
           await repository.signInWithGoogle();
+
       if (googleUser == null) {
         _debugLog('Google Sign In was cancelled by user');
         return;
       }
-      _debugLog('Google user obtained: ${googleUser.email}');
+
       final GoogleSignInAuthentication googleAuth =
           await repository.getGoogleAuth(googleUser);
       final String? googleAccessToken = googleAuth.accessToken;
       final String? googleIdToken = googleAuth.idToken;
-      _debugLog(
-          'Google access token obtained: ${googleAccessToken != null ? "Yes" : "No"}');
-      _debugLog(
-          'Google ID token obtained: ${googleIdToken != null ? "Yes" : "No"}');
 
-      if (googleAccessToken == null || googleIdToken == null) {
+      _debugLog(
+          'Google Access Token: ${googleAccessToken != null ? "Available" : "Not available"}');
+      _debugLog(
+          'Google ID Token: ${googleIdToken != null ? "Available" : "Not available"}');
+
+      // Try access token first as it's more commonly used by backends
+      String? tokenForBackend = googleAccessToken;
+      if (tokenForBackend == null || tokenForBackend.isEmpty) {
+        tokenForBackend = googleIdToken;
+      }
+
+      if (tokenForBackend == null || tokenForBackend.isEmpty) {
         throw Exception('Failed to get Google tokens');
       }
-      _debugLog('Google tokens obtained successfully');
+
       _debugLog(
-          'Access Token: ${googleAccessToken.substring(0, min(googleAccessToken.length, 20))}...');
+          'Using token type: ${tokenForBackend.startsWith('ya29') ? "access_token" : "id_token"}');
       _debugLog(
-          'ID Token: ${googleIdToken.substring(0, min(googleIdToken.length, 20))}...');
+          'Token for backend (first 20 chars): ${tokenForBackend.substring(0, 20)}...');
 
-      // First, sign in with Firebase
-      final AuthCredential credential =
-          repository.getGoogleCredential(googleAuth);
-      final UserCredential userCredential =
-          await repository.signInWithGoogleCredential(credential);
+      // Send token to backend
+      await repository.googleSignIn(tokenForBackend);
 
-      // Then, sign in with your backend using ID token instead of access token
-      try {
-        await repository.googleSignIn(googleIdToken);
-        _debugLog('Successfully signed in with Google token to backend');
-      } catch (e) {
-        _debugLog('Error during backend sign in: $e');
-        throw Exception('Backend authentication failed: $e');
-      }
+      // Get user info after successful authentication
+      await getUserInfo();
 
-      final User? firebaseUser = userCredential.user;
-      if (firebaseUser != null) {
-        _debugLog('Firebase user authenticated: ${firebaseUser.uid}');
-        DocumentSnapshot userDoc =
-            await repository.getUserData(firebaseUser.uid);
-        if (!userDoc.exists) {
-          Users newUser = Users(
-            id: firebaseUser.uid,
-            email: firebaseUser.email!,
-            name: firebaseUser.displayName,
-            phone: firebaseUser.phoneNumber,
-            profileImage: firebaseUser.photoURL,
-          );
-          await repository.saveUserToFirestore(newUser);
-          _userInfo = newUser;
-          _debugLog('New user created and saved to Firestore');
-        } else {
-          _userInfo = Users.fromJson(userDoc.data() as Map<String, dynamic>);
-          _debugLog('Existing user loaded from Firestore');
-        }
-        // Get the user token from your backend
-        _token = await repository.getCurrentToken();
-        _debugLog('Backend token obtained: ${_token != null ? "Yes" : "No"}');
-        // Cache the user info
-        if (_userInfo != null) {
-          await _cacheUserInfo(_userInfo!);
-        }
-        _user = AsyncValue.success(_userInfo);
-        notifyListeners();
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => const BottomNavBar()));
-      }
+      _debugLog('Google Sign In completed successfully');
     } catch (e) {
       _debugLog('Google Sign In failed: $e');
-      _error = e.toString();
-      notifyListeners();
-      throw Exception(e);
+      rethrow;
     }
   }
 
@@ -502,6 +464,18 @@ class AuthenticationProvider extends ChangeNotifier {
         'idToken': null,
         'email': null,
       };
+    }
+  }
+
+  Future<void> clearGoogleSignInCache() async {
+    try {
+      _debugLog('Clearing Google Sign-In cache');
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+      await googleSignIn.disconnect();
+      _debugLog('Google Sign-In cache cleared');
+    } catch (e) {
+      _debugLog('Error clearing Google Sign-In cache: $e');
     }
   }
 

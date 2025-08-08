@@ -275,7 +275,7 @@ class _ProfileState extends State<Profile> {
                           _buildInfoItem(
                             icon: Icons.date_range,
                             title: "Date of Birth",
-                            value: userInfo?.dob ?? "N/A",
+                            value: _formatDateOfBirth(userInfo?.dob),
                           ),
                         ],
                       ),
@@ -310,6 +310,57 @@ class _ProfileState extends State<Profile> {
         return "Other";
       default:
         return gender;
+    }
+  }
+
+  String _formatDateOfBirth(String? dob) {
+    if (dob == null || dob.isEmpty) return "N/A";
+
+    if (!dob.contains('-') && !dob.contains('/')) {
+      return dob;
+    }
+
+    try {
+      DateTime dateTime;
+      if (dob.contains('T')) {
+        dateTime = DateTime.parse(dob);
+      } else if (dob.contains('-')) {
+        final parts = dob.split('-');
+        if (parts.length == 3) {
+          dateTime = DateTime(
+              int.parse(parts[0]), int.parse(parts[1]), int.parse(parts[2]));
+        } else {
+          return dob;
+        }
+      } else if (dob.contains('/')) {
+        final parts = dob.split('/');
+        if (parts.length == 3) {
+          dateTime = DateTime(
+              int.parse(parts[2]), int.parse(parts[1]), int.parse(parts[0]));
+        } else {
+          return dob;
+        }
+      } else {
+        return dob;
+      }
+      final months = [
+        '',
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+      ];
+      return "${dateTime.day} ${months[dateTime.month]}, ${dateTime.year}";
+    } catch (e) {
+      return dob;
     }
   }
 

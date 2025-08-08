@@ -599,7 +599,8 @@ class _MyOrderDetailState extends State<MyOrderDetail> {
                             const Divider(thickness: 1),
                             PaymentRowItem(
                               title: 'Total',
-                              amount:_calculateSubtotal(orderDetail),
+                              amount:
+                              _calculateSubtotal(orderDetail),
                               isTotal: true,
                             ),
                             const SizedBox(height: 16),

@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
-import 'package:palm_ecommerce_app/data/dto/user_dto.dart';
 import 'package:palm_ecommerce_app/data/network/api_endpoints.dart';
 import 'package:palm_ecommerce_app/data/network/fetchingdata.dart';
 import 'package:palm_ecommerce_app/data/repository/authentication_repository.dart';
@@ -35,15 +34,12 @@ class AuthenticationApiRepository extends AuthenticationRepository {
 
     final result = <String, dynamic>{};
 
-    // Check cached token
     result['cachedToken'] = _cachedToken != null && _cachedToken!.isNotEmpty;
     result['cachedTokenValue'] = _cachedToken != null
         ? (_cachedToken!.length > 10
             ? '${_cachedToken!.substring(0, 10)}...'
             : _cachedToken)
         : null;
-
-    // Check shared preferences
     try {
       final prefs = await SharedPreferences.getInstance();
       final storedToken = prefs.getString(_tokenKey);
@@ -54,28 +50,23 @@ class AuthenticationApiRepository extends AuthenticationRepository {
               : storedToken)
           : null;
 
-      // Check global variables
       result['globalToken'] = token != null && token!.isNotEmpty;
       result['globalTokenValue'] = token != null
           ? (token!.length > 10 ? '${token!.substring(0, 10)}...' : token)
           : null;
-
       result['globalUseToken'] = usetoken != null && usetoken!.isNotEmpty;
       result['globalUseTokenValue'] = usetoken != null
           ? (usetoken!.length > 10
               ? '${usetoken!.substring(0, 10)}...'
               : usetoken)
           : null;
-
       result['isTokenFlag'] = isToken;
-
       _debugLog('Token state check complete:');
       _debugLog('- Cached token exists: ${result['cachedToken']}');
       _debugLog('- Stored token exists: ${result['storedToken']}');
       _debugLog('- Global token exists: ${result['globalToken']}');
       _debugLog('- Global usetoken exists: ${result['globalUseToken']}');
       _debugLog('- isToken flag: ${result['isTokenFlag']}');
-
       return result;
     } catch (e) {
       _debugLog('❌ Error checking token state: $e');
@@ -102,7 +93,6 @@ class AuthenticationApiRepository extends AuthenticationRepository {
       _debugLog(
           '✅ Token retrieved from SharedPreferences (length: ${_cachedToken!.length})');
     }
-
     return _cachedToken!;
   }
 
@@ -352,43 +342,74 @@ class AuthenticationApiRepository extends AuthenticationRepository {
   }
 
   @override
-  Future<void> googleSignIn(String accessToken) async {
+  Future<void> googleSignIn(String token) async {
     try {
-      _logger.info('Attempting Google sign in');
+      _logger.info(
+          'Attempting Google sign in with token type: ${token.startsWith('ya29') ? 'access_token' : 'id_token'}');
+      _logger.info('Token length: ${token.length}');
+      _logger.info('Token prefix: ${token.substring(0, 20)}...');
+
       final response = await FetchingData.postHeader(
         ApiConstant.googleSignIn,
         _baseHeaders,
         {
           'social_type': 'google',
-          'token': accessToken,
+          'token': token,
         },
       );
-      _logger
-          .info('Google sign in response status code: ${response.statusCode}');
-      _logger.info('Google sign in response body: ${response.body}');
+
+      _logger.info('Google sign in response: ${response.statusCode}');
+      _logger.info('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final responseBody = json.decode(response.body);
+        _logger.info('Parsed response: $responseBody');
+
         final data = responseBody['data'];
         final accessToken = responseBody['token'] ??
             (data is Map ? data['token'] ?? data['access_token'] ?? '' : '');
 
         if (accessToken == null || accessToken.isEmpty) {
-          _logger.severe('Access token not found in response: $responseBody');
-          throw Exception('Access token not found in response');
+          _logger.severe('No backend token in response: $responseBody');
+          throw Exception(
+              'Authentication failed: No token received from server');
         }
+
         await saveToken(accessToken);
         _cachedToken = accessToken;
         token = accessToken;
         usetoken = accessToken.replaceAll('"', '');
         isToken = true;
-        _logger.info('Google sign in successful, token saved');
-        UserDto.fromJson(accessToken, data ?? responseBody['user']);
+
+        _logger.info('Google sign in successful');
         return;
       }
+
+      // Handle specific error cases
+      if (response.statusCode == 400) {
+        final responseBody = json.decode(response.body);
+        String errorMessage =
+            responseBody['message'] ?? 'Invalid Google token format';
+        throw Exception('Bad request: $errorMessage');
+      } else if (response.statusCode == 401) {
+        throw Exception('Invalid Google token. Please try signing in again.');
+      } else if (response.statusCode == 403) {
+        throw Exception(
+            'Access denied. Please check your Google account permissions.');
+      } else if (response.statusCode == 422) {
+        final responseBody = json.decode(response.body);
+        String errorMessage =
+            responseBody['message'] ?? 'Token validation failed';
+        throw Exception('Token validation error: $errorMessage');
+      }
+
       throw _handleErrorResponse(response, 'Google sign in');
     } catch (e) {
       _logger.severe('Google sign in error: $e');
+      if (e.toString().contains('Send Wrong Token')) {
+        throw Exception(
+            'Invalid token format. Please try signing out of Google and signing in again.');
+      }
       rethrow;
     }
   }
@@ -488,12 +509,10 @@ class AuthenticationApiRepository extends AuthenticationRepository {
             .replaceAll('http://', '');
         var url = Uri.https(baseUrl, ApiConstant.updateProfile);
         var request = http.MultipartRequest('POST', url);
-
         // Add auth headers (strip content-type as it's set by multipart)
         var headers = _getAuthHeaders(token);
         headers.remove('Content-Type'); // Remove content-type for multipart
         request.headers.addAll(headers);
-
         // Add the profile photo file
         _logger
             .info('Adding profile photo from: ${params.profile_photo!.path}');

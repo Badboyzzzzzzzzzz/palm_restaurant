@@ -132,15 +132,33 @@ class _SignInBodyState extends State<SignInBody> {
     try {
       final authProvider =
           Provider.of<AuthenticationProvider>(context, listen: false);
-      final googleTokens = await authProvider.getCurrentGoogleUserTokens();
-      if (googleTokens['accessToken'] != null) {
-        print('Current Google access token: ${googleTokens['accessToken']}');
-        print('Current Google ID token: ${googleTokens['idToken']}');
-      }
+
+      // Clear any existing Google sign-in cache first
+      await authProvider.clearGoogleSignInCache();
+
+      // Attempt Google sign-in
       await authProvider.signInWithGoogle(context);
+
+      // Navigate to home if successful
+      if (mounted) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const BottomNavBar()),
+        );
+      }
     } catch (e) {
       if (mounted) {
-        _showAlertMessage("Google sign in failed: ${e.toString()}");
+        String errorMessage = "Google sign in failed";
+        if (e.toString().contains("cancelled")) {
+          errorMessage = "Google sign in was cancelled";
+        } else if (e.toString().contains("Invalid token")) {
+          errorMessage = "Invalid Google token. Please try again.";
+        } else if (e.toString().contains("Send Wrong Token")) {
+          errorMessage = "Token authentication failed. Please try again.";
+        } else {
+          errorMessage = "Google sign in failed: ${e.toString()}";
+        }
+        _showAlertMessage(errorMessage);
       }
     } finally {
       if (mounted) {
