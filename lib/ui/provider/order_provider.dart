@@ -28,13 +28,10 @@ class OrderProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Method to notify listeners when order status is updated manually
   void notifyOrderStatusUpdated() {
-    // Update the cached orders with the modified data
     if (_orders.data != null) {
       _cachedOrders = _orders.data!;
     }
-    // Notify listeners to refresh UI
     notifyListeners();
   }
 
@@ -50,7 +47,6 @@ class OrderProvider extends ChangeNotifier {
       _orders = AsyncValue.success(_cachedOrders);
       notifyListeners();
     } catch (e) {
-      print('DEBUG: Provider - Error in getOrders: $e');
       _orders = AsyncValue.error(e);
     }
     notifyListeners();
@@ -89,7 +85,6 @@ class OrderProvider extends ChangeNotifier {
     }
   }
 
-  // Method to force refresh order status if needed
   Future<void> refreshOrderStatus() async {
     _hasLoadedOrderStatus = false;
     await getOrderStatus();
@@ -99,20 +94,18 @@ class OrderProvider extends ChangeNotifier {
     _cancelOrderStatus = AsyncValue.loading();
     notifyListeners();
     try {
-      print('DEBUG: Provider - Canceling order: $orderId');
       await orderRepository.cancelOrder(orderId);
-
-      // Update local cached orders by removing the canceled order
       _cachedOrders.removeWhere((order) => order.bookingId == orderId);
       _orders = AsyncValue.success(_cachedOrders);
       _cancelOrderStatus = AsyncValue.success(null);
     } catch (e) {
-      print('DEBUG: Provider - Error in cancelOrder: $e');
       _cancelOrderStatus = AsyncValue.error(e);
     }
     notifyListeners();
   }
-  Future<void> reviewOrder(String orderId, String productId, String rating, String comment) async {
+
+  Future<void> reviewOrder(
+      String orderId, String productId, String rating, String comment) async {
     try {
       await orderRepository.reviewOrder(orderId, productId, rating, comment);
     } catch (e) {

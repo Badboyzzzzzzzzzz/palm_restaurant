@@ -238,18 +238,6 @@ class _SearchFieldState extends State<SearchField> {
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.search,
-                color: Theme.of(context).primaryColor,
-                size: 18,
-              ),
-            ),
             const SizedBox(width: 8),
             Expanded(
               child: TextField(
@@ -268,7 +256,7 @@ class _SearchFieldState extends State<SearchField> {
                 ),
                 style: const TextStyle(
                   fontSize: 18,
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.normal,
                   color: Colors.black87,
                   
                 ),

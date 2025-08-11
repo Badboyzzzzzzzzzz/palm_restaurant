@@ -114,7 +114,10 @@ class _OrderScreenState extends State<OrderScreen>
         centerTitle: true,
         backgroundColor: primaryBackgroundColor,
         title: Text(AppLocalizations.of(context)?.orders ?? 'Orders',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 24)),
         actions: [
           IconButton(
             onPressed: () {
@@ -214,9 +217,9 @@ class _OrderScreenState extends State<OrderScreen>
                               return FoodWidget(
                                 orderId: order.bookingId ?? '',
                                 orderPhoto: order.orderphoto,
-                                price:
-                                    double.tryParse(order.grandTotal ?? '0') ??
-                                        0,
+                                price: order.isPickUp == '1'
+                                    ? (double.tryParse(order.grandTotal ?? '0') ?? 0) - 2
+                                    : (double.tryParse(order.grandTotal ?? '0') ?? 0),
                                 deliveryStatus: order.isPickUp == '1'
                                     ? 'Pickup'
                                     : 'Delivery',
@@ -227,10 +230,6 @@ class _OrderScreenState extends State<OrderScreen>
                                 onCancelPressed: () {
                                   orderProvider
                                       .cancelOrder(order.bookingId ?? '');
-                                },
-                                onTrackDriverPressed: () {
-                                  print(
-                                      'Track driver for order: ${order.bookingId}');
                                 },
                               );
                             },

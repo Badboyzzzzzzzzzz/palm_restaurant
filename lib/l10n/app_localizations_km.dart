@@ -372,10 +372,10 @@ class AppLocalizationsKm extends AppLocalizations {
   String get goodMorning => 'អរុណសួស្តី';
 
   @override
-  String get goodAfternoon => 'សួស្តីថ្ងៃត្រង់';
+  String get goodAfternoon => 'ទិវាសួរស្តី';
 
   @override
-  String get goodEvening => 'សួស្តីល្ងាច';
+  String get goodEvening => 'សាយ័ន្តសួរស្តី';
 
   @override
   String get greetingSubtitle => 'ពេលវេលាដើម្បីញ៉ាំម្ហូបអ្នកចូលចិត្តហើយ!';

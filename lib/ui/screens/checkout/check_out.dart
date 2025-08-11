@@ -648,7 +648,7 @@ class _CheckOutState extends State<CheckOut> with TickerProviderStateMixin {
                                   Text(
                                     selectedCheckOut == 'Pick Up'
                                         ? '\$${((double.tryParse(checkoutInfo.data?.grandTotal?.replaceAll(',', '') ?? '0') ?? 0.0) - (double.tryParse(checkoutInfo.data?.deliveryFee?.replaceAll(',', '') ?? '0') ?? 0.0)).toStringAsFixed(2)}'
-                                        : '\$${checkoutInfo.data?.grandTotal ?? "0.00"}',
+                                        : '\$${((double.tryParse(checkoutInfo.data?.grandTotal?.replaceAll(',', '') ?? '0') ?? 0.0) - (double.tryParse(checkoutInfo.data?.totalDiscountPrice?.replaceAll(',', '') ?? '0') ?? 0.0)).toStringAsFixed(2)}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -701,7 +701,7 @@ class _CheckOutState extends State<CheckOut> with TickerProviderStateMixin {
                                 checkoutInfo.data?.grandTotal != null &&
                                 checkoutInfo.data?.deliveryFee != null
                             ? '\$${((double.tryParse(checkoutInfo.data?.grandTotal?.replaceAll(',', '') ?? '0') ?? 0.0) - (double.tryParse(checkoutInfo.data?.deliveryFee?.replaceAll(',', '') ?? '0') ?? 0.0)).toStringAsFixed(2)}'
-                            : '\$${checkoutInfo.data?.grandTotal ?? "0.00"}',
+                            : '\$${((double.tryParse(checkoutInfo.data?.grandTotal?.replaceAll(',', '') ?? '0') ?? 0.0) - (double.tryParse(checkoutInfo.data?.totalDiscountPrice?.replaceAll(',', '') ?? '0') ?? 0.0)).toStringAsFixed(2)}',
                         style: TextStyle(
                           color: const Color(0xFFF5D248),
                           fontWeight: FontWeight.bold,

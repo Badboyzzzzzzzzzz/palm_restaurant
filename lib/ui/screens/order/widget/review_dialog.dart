@@ -13,17 +13,14 @@ class ProductReviewDialog extends StatefulWidget {
   @override
   State<ProductReviewDialog> createState() => _ProductReviewDialogState();
 }
-
 class _ProductReviewDialogState extends State<ProductReviewDialog> {
   int _rating = 0;
   final TextEditingController _commentController = TextEditingController();
-
   @override
   void dispose() {
     _commentController.dispose();
     super.dispose();
   }
-
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -51,7 +48,6 @@ class _ProductReviewDialogState extends State<ProductReviewDialog> {
               ),
             ),
             const SizedBox(height: 20),
-            // Rating Stars
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(5, (index) {
@@ -70,7 +66,6 @@ class _ProductReviewDialogState extends State<ProductReviewDialog> {
               }),
             ),
             const SizedBox(height: 20),
-            // Comment TextField
             TextField(
               controller: _commentController,
               maxLines: 3,
@@ -89,7 +84,6 @@ class _ProductReviewDialogState extends State<ProductReviewDialog> {
               ),
             ),
             const SizedBox(height: 20),
-            // Submit Button
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(

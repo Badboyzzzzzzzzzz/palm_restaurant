@@ -15,7 +15,7 @@ class ApiConstant {
   static const String superHotPromotion =
       '/api/get-product-super-hot-promotion/PALM-00060001/PALM-0006/';
   static const String newArrivalProduct =
-      '/api/get-product-new-arrive/PALM-00080001/PALM-0008/';
+      '/api/get-product-new-arrive/PALM-00060001/PALM-0006/';
   static const String relatedProduct =
       '/api/product-related?company_id=PALM-0006&branch_id=PALM-00060001';
   static const String searchFoodDishes = '/api/search-product';
@@ -23,7 +23,6 @@ class ApiConstant {
   static const String categories = '/api/get-sub-category/PALM-0006/';
   // Slideshow Endpoints
   static const String slideshows = '/slideshows';
-
   // Cart Endpoints
   static const String getCart = '/api/get-cart/';
   static const String addToCart = 'api/add_to_cart';

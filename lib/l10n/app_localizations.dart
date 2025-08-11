@@ -102,7 +102,6 @@ abstract class AppLocalizations {
     Locale('en'),
     Locale('km')
   ];
-
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:

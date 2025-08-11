@@ -18,7 +18,6 @@ class FoodWidget extends StatelessWidget {
   final String date;
   final int itemCount;
   final VoidCallback? onCancelPressed;
-  final VoidCallback? onTrackDriverPressed;
   final bool isAssetImage;
   const FoodWidget({
     super.key,
@@ -30,7 +29,6 @@ class FoodWidget extends StatelessWidget {
     required this.date,
     required this.itemCount,
     this.onCancelPressed,
-    this.onTrackDriverPressed,
     this.isAssetImage = false,
   });
   String _formatDate(String dateStr) {
@@ -122,6 +120,7 @@ class FoodWidget extends StatelessWidget {
                           margin: const EdgeInsets.only(right: 8),
                           width: 100,
                           child: ClipRRect(
+                            
                             borderRadius: BorderRadius.circular(12),
                             child: isAssetImage
                                 ? Image.asset(
@@ -191,7 +190,7 @@ class AnimatedCancelButton extends StatefulWidget {
 
 class _AnimatedCancelButtonState extends State<AnimatedCancelButton>
     with SingleTickerProviderStateMixin {
-  bool _isPressed = false;
+  final bool _isPressed = false;
   bool _isLoading = false;
   late AnimationController _loadingController;
   late Animation<double> _buttonScaleAnimation;
@@ -236,7 +235,6 @@ class _AnimatedCancelButtonState extends State<AnimatedCancelButton>
       ),
     );
   }
-
   @override
   void dispose() {
     _loadingController.dispose();

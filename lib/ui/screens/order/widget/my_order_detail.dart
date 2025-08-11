@@ -10,7 +10,6 @@ class TrackingStep {
   final String title;
   final bool isCompleted;
   final IconData icon;
-
   TrackingStep({
     required this.title,
     required this.isCompleted,
@@ -42,11 +41,7 @@ class _MyOrderDetailState extends State<MyOrderDetail> {
     final orderProvider = context.watch<OrderProvider>();
     final orderDetail = orderProvider.orderDetails.data;
     final orderStatusList = orderProvider.orderStatus.data ?? [];
-
-    // Define tracking steps dynamically based on order status
     List<TrackingStep> trackingSteps = [];
-
-    // Default icons for different steps
     final Map<String, IconData> statusIcons = {
       'To Pay': Icons.receipt_outlined,
       'Confirmed': Icons.inventory_2_outlined,
@@ -334,10 +329,7 @@ class _MyOrderDetailState extends State<MyOrderDetail> {
                             ],
                           ),
                         ),
-
                       const SizedBox(height: 8),
-
-                      // Items in Order Section
                       Container(
                         color: Colors.white,
                         padding: const EdgeInsets.all(16),
@@ -534,10 +526,7 @@ class _MyOrderDetailState extends State<MyOrderDetail> {
                           ],
                         ),
                       ),
-
                       const SizedBox(height: 8),
-
-                      // Order Summary Section
                       Container(
                         color: Colors.white,
                         padding: const EdgeInsets.all(16),
@@ -570,24 +559,23 @@ class _MyOrderDetailState extends State<MyOrderDetail> {
                             ),
                             PaymentRowItem(
                               title: 'Delivery Fee',
-                              amount: orderDetail.deliveryFee ?? '0.00',
+                              amount: orderDetail.isPickUp ?? true
+                                  ? '0.00'
+                                  : orderDetail.deliveryFee ?? '0.00',
                             ),
 
                             PaymentRowItem(
                               title: 'Packaging',
                               amount: orderDetail.packaging ?? '0.00',
                             ),
-
                             PaymentRowItem(
                               title: 'Tax',
                               amount: orderDetail.tax ?? '0.00',
                             ),
-
                             PaymentRowItem(
                               title: 'Discount',
                               amount: orderDetail.discountAmount ?? '0.00',
                             ),
-
                             Text(
                               orderDetail.method ?? '',
                               style: const TextStyle(
@@ -599,8 +587,9 @@ class _MyOrderDetailState extends State<MyOrderDetail> {
                             const Divider(thickness: 1),
                             PaymentRowItem(
                               title: 'Total',
-                              amount:
-                              _calculateSubtotal(orderDetail),
+                              amount: orderDetail.isPickUp ?? true
+                                  ? _calculateSubtotal(orderDetail)
+                                  : orderDetail.grandTotal ?? '0.00',
                               isTotal: true,
                             ),
                             const SizedBox(height: 16),
