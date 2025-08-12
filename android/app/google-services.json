@@ -58,11 +58,11 @@
       },
       "oauth_client": [
         {
-          "client_id": "864597870395-s8mt7vk6vjbbptj0ief1la75kihbqgj1.apps.googleusercontent.com",
+          "client_id": "864597870395-jk0ifoj2i4cp5953olakekpt2ivl6qhh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.palm.restaurant.app",
-            "certificate_hash": "198d9780e39fd941576afb91a91bc47468bfca77"
+            "certificate_hash": "e254406c56780a69191df88949d7333a4b4daa36"
           }
         },
         {

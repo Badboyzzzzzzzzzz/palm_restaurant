@@ -123,7 +123,7 @@ class _CartScreenState extends State<CartScreen> {
           if (cartProvider.cart.state == AsyncValueState.success &&
               cartProvider.cart.data?.item.isNotEmpty == true)
             Positioned(
-              bottom: 10,
+              bottom: 60,
               left: 0,
               right: 0,
               child: Container(

@@ -1,13 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:palm_ecommerce_app/l10n/app_localizations.dart';
 import 'package:palm_ecommerce_app/ui/screens/splash/spalsh_screen.dart';
-import 'package:palm_ecommerce_app/theme/theme_config.dart';
 import 'package:palm_ecommerce_app/util/app_them.dart';
-// Providers
+// Provider
 import 'package:palm_ecommerce_app/ui/provider/language_provider.dart';
 import 'package:palm_ecommerce_app/ui/provider/authentication_provider.dart';
 import 'package:palm_ecommerce_app/ui/provider/product_provider.dart';
@@ -111,8 +109,6 @@ class MyApp extends StatelessWidget {
           navigatorKey: appProvider.navigatorKey,
           debugShowCheckedModeBanner: false,
           title: 'PALM Ecommerce',
-          theme: _themeData(appProvider.theme),
-          darkTheme: _themeData(ThemeConfig.lightTheme),
           locale: languageProvider.currentLocale,
           supportedLocales: AppLocalizations.supportedLocales,
           localizationsDelegates: [
@@ -126,14 +122,5 @@ class MyApp extends StatelessWidget {
       },
     );
   }
-  ThemeData _themeData(ThemeData theme) {
-    return theme.copyWith(
-      textTheme: GoogleFonts.sourceSerif4TextTheme(theme.textTheme).apply(
-        fontFamily: 'Khmer OS',
-      ),
-      colorScheme: theme.colorScheme.copyWith(
-        secondary: ThemeConfig.lightAccent,
-      ),
-    );
-  }
+ 
 }

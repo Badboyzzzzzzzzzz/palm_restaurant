@@ -26,11 +26,11 @@ class CategoryBody extends StatefulWidget {
 
 class _CategoryBodyState extends State<CategoryBody>
     with SingleTickerProviderStateMixin {
-  int _selectedCategoryIndex = 0; // Default to first subcategory
+  int _selectedCategoryIndex = 0;
   String _selectedSubcategoryId = '';
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
-  bool _isGridView = true; // Toggle between grid and list view
+  bool _isGridView = true;
 
   @override
   void initState() {
@@ -44,34 +44,39 @@ class _CategoryBodyState extends State<CategoryBody>
     );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _animationController.forward();
-      final categoryProvider =
-          Provider.of<CategoryProvider>(context, listen: false);
-      categoryProvider.fetchSubCategories(widget.categoryId).then((_) {
-        if (categoryProvider.subCategories.data != null &&
-            categoryProvider.subCategories.data!.isNotEmpty) {
-          setState(() {
-            _selectedCategoryIndex = 0;
-            _selectedSubcategoryId =
-                categoryProvider.subCategories.data![0].subId ?? '';
-          });
-          categoryProvider
-              .fetchProductsBySubCategory(_selectedSubcategoryId)
-              .then((_) {
-            print(
-                'DEBUG: Fetched ${categoryProvider.productsBySubCategory.data?.length} products for subcategory $_selectedSubcategoryId');
-            if (categoryProvider.productsBySubCategory.data != null) {
-              final productIds = categoryProvider.productsBySubCategory.data!
-                  .map((p) => p.productId)
-                  .toList();
-              print('DEBUG: Product IDs: $productIds');
-            }
-          });
-        }
-      });
+      _initializeCategoryData();
     });
   }
 
+  Future<void> _initializeCategoryData() async {
+    try {
+      _animationController.forward();
+      final categoryProvider =
+          Provider.of<CategoryProvider>(context, listen: false);
+
+      await categoryProvider.fetchSubCategories(widget.categoryId);
+
+      if (mounted &&
+          categoryProvider.subCategories.data != null &&
+          categoryProvider.subCategories.data!.isNotEmpty) {
+        setState(() {
+          _selectedCategoryIndex = 0;
+          _selectedSubcategoryId =
+              categoryProvider.subCategories.data![0].subId ?? '';
+        });
+
+        if (_selectedSubcategoryId.isNotEmpty) {
+          await categoryProvider
+              .fetchProductsBySubCategory(_selectedSubcategoryId);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        // Handle error silently or show error state
+        debugPrint('Error initializing category data: $e');
+      }
+    }
+  }
   @override
   void dispose() {
     _animationController.dispose();
@@ -143,37 +148,46 @@ class _CategoryBodyState extends State<CategoryBody>
             subCategories: categoryProvider.subCategories.data ?? [],
             selectedCategoryIndex: _selectedCategoryIndex,
             onCategoryIndexSelected: (index) {
+              if (!mounted) return;
+
               setState(() {
                 _selectedCategoryIndex = index;
                 final subCategories = categoryProvider.subCategories.data ?? [];
                 if (index >= 0 && index < subCategories.length) {
                   _selectedSubcategoryId = subCategories[index].subId ?? '';
-                  _animationController.reset();
-                  categoryProvider
-                      .fetchProductsBySubCategory(_selectedSubcategoryId)
-                      .then((_) {
-                    _animationController.forward();
-                    print(
-                        'DEBUG: Selected subcategory $index with ID $_selectedSubcategoryId');
-                    print(
-                        'DEBUG: Fetched ${categoryProvider.productsBySubCategory.data?.length} products');
-                  });
                 }
               });
+
+              if (_selectedSubcategoryId.isNotEmpty) {
+                _animationController.reset();
+                categoryProvider
+                    .fetchProductsBySubCategory(_selectedSubcategoryId)
+                    .then((_) {
+                  if (mounted) {
+                    _animationController.forward();
+                  }
+                }).catchError((error) {
+                  debugPrint('Error fetching products: $error');
+                });
+              }
             },
             onCategoryIdSelected: (subCategoryId) {
-              print('Selected category ID: $subCategoryId');
+              if (!mounted || subCategoryId.isEmpty) return;
+
               setState(() {
                 _selectedSubcategoryId = subCategoryId;
               });
+
               _animationController.reset();
               categoryProvider
                   .fetchProductsBySubCategory(subCategoryId)
                   .then((_) {
-                _animationController.forward();
-                print('DEBUG: Selected category with ID $subCategoryId');
-                print(
-                    'DEBUG: Fetched ${categoryProvider.productsBySubCategory.data?.length} products');
+                if (mounted) {
+                  _animationController.forward();
+                }
+              }).catchError((error) {
+                debugPrint(
+                    'Error fetching products for category $subCategoryId: $error');
               });
             },
           ),
@@ -232,8 +246,10 @@ class _CategoryBodyState extends State<CategoryBody>
             SizedBox(height: 24),
             ElevatedButton(
               onPressed: () {
-                categoryProvider
-                    .fetchProductsBySubCategory(_selectedSubcategoryId);
+                if (_selectedSubcategoryId.isNotEmpty) {
+                  categoryProvider
+                      .fetchProductsBySubCategory(_selectedSubcategoryId);
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFFF5D248),
