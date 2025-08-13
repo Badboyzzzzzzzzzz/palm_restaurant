@@ -98,9 +98,10 @@ class _SavePageState extends State<Favoritescreen>
                 const SizedBox(width: 10),
                 Text(
                   AppLocalizations.of(context)?.favorites ?? 'Favorites',
-                  style: semiBoldText20.copyWith(
+                  style: TextStyle(
                     color: blackColor,
                     letterSpacing: 0.5,
+                    fontSize: 24,
                   ),
                 ),
               ],

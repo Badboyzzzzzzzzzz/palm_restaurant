@@ -8,7 +8,7 @@ import 'package:palm_ecommerce_app/ui/screens/home/hot_promotion/hot_promotion_v
 import 'package:palm_ecommerce_app/ui/screens/home/hot_promotion/hot_promotion.dart';
 import 'package:palm_ecommerce_app/ui/screens/home/widget/cart_icon.dart';
 import 'package:palm_ecommerce_app/ui/screens/home/category/food_category_list.dart';
-import 'package:palm_ecommerce_app/ui/screens/home/discount/slide_show_dicount_food.dart';
+import 'package:palm_ecommerce_app/ui/screens/home/banner/app_banner.dart';
 import 'package:palm_ecommerce_app/ui/screens/home/new_arrival_food/new_arrival_food.dart';
 import 'package:palm_ecommerce_app/ui/screens/home/new_arrival_food/view_all_new_arrival_screen.dart';
 import 'package:palm_ecommerce_app/ui/screens/home/widget/notification_icon.dart';
@@ -24,11 +24,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final ScrollController _scrollController = ScrollController();
   Timer? _debounceTimer;
-  Timer? _timeTimer; // Made nullable for better null safety
-  bool _isInitialized = false;
-  String selectedCategory = '';
+  Timer? _timeTimer;
   String _greeting = '';
 
   @override
@@ -41,18 +38,21 @@ class _HomePageState extends State<HomePage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _updateGreeting();
-    // Start timer after first greeting update
-    if (_timeTimer == null) {
+    // Only update greeting and start timer if not already running
+    if (_timeTimer == null || !_timeTimer!.isActive) {
+      _updateGreeting();
       _startGreetingTimer();
     }
   }
 
   void _startGreetingTimer() {
+    // Cancel existing timer first
+    _timeTimer?.cancel();
     _timeTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
       if (mounted) {
-        // Check if widget is still mounted
         _updateGreeting();
+      } else {
+        timer.cancel();
       }
     });
   }
@@ -60,17 +60,11 @@ class _HomePageState extends State<HomePage> {
   void _updateGreeting() {
     if (!mounted) return;
 
-    // Ensure we're in a valid build context
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
+    final localizations = AppLocalizations.of(context);
+    if (localizations == null) return;
 
-      final localizations = AppLocalizations.of(context);
-      if (localizations == null) {
-        setState(() => _greeting = 'Welcome');
-        return;
-      }
-
-      final hour = DateTime.now().hour;
+    final hour = DateTime.now().hour;
+    if (mounted) {
       setState(() {
         if (hour < 12) {
           _greeting = localizations.goodMorning;
@@ -80,37 +74,40 @@ class _HomePageState extends State<HomePage> {
           _greeting = localizations.goodEvening;
         }
       });
-    });
+    }
   }
 
   Future<void> _loadUserData() async {
     if (!mounted) return;
 
-    final authProvider =
-        Provider.of<AuthenticationProvider>(context, listen: false);
-    await authProvider.initializeCurrentUser();
-    if (mounted) {
-      setState(() {
-        token = authProvider.token;
-      });
+    try {
+      final authProvider =
+          Provider.of<AuthenticationProvider>(context, listen: false);
+      await authProvider.initializeCurrentUser();
+
+      if (mounted) {
+        setState(() {
+          token = authProvider.token;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error loading user data: $e');
     }
   }
 
   Future<void> _initializeData() async {
-    if (!_isInitialized && mounted) {
-      _isInitialized = true;
-      // Use addPostFrameCallback to ensure we're not updating during build
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    // Use addPostFrameCallback more safely
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
         fetchData();
-      });
-    }
+      }
+    });
   }
 
   @override
   void dispose() {
     _debounceTimer?.cancel();
-    _timeTimer?.cancel(); // Cancel timer safely
-    _scrollController.dispose();
+    _timeTimer?.cancel();
     super.dispose();
   }
 
@@ -121,9 +118,19 @@ class _HomePageState extends State<HomePage> {
     _debounceTimer = Timer(const Duration(seconds: 2), () {});
 
     try {
+      if (!mounted) return;
+
       final provider = Provider.of<ProductProvider>(context, listen: false);
       await provider.fetchProducts();
+
+      if (!mounted) return;
       await provider.fetchTopSaleFood();
+
+      if (!mounted) return;
+      await provider.fetchNewArrivalFood();
+
+      if (!mounted) return;
+      await provider.fetchSlideShow();
     } catch (e) {
       debugPrint('Error fetching data: $e');
     }
@@ -132,13 +139,13 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthenticationProvider>();
-    final user = authProvider.user;
-    final userData = user.data; // Add null safety for user
+    final userData = authProvider.user.data;
     final profileImage = userData?.profileImage;
 
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ));
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: Colors.white,
@@ -202,8 +209,8 @@ class _HomePageState extends State<HomePage> {
                                           errorBuilder:
                                               (context, error, stackTrace) {
                                             return Container(
-                                              width: 36,
-                                              height: 36,
+                                              width: 40,
+                                              height: 40,
                                               color: Colors.black,
                                               child: const Icon(Icons.person,
                                                   color: Colors.white),
@@ -236,19 +243,17 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ],
                             ),
-                            // Notification icon only (cart icon moved to floating button)
                             const NotificationIcon(),
                           ],
                         ),
                       ),
-                      // Dynamic greeting based on time of day
                       Padding(
                         padding: const EdgeInsets.fromLTRB(30, 0, 30, 8),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              _greeting.isEmpty ? 'Hello' : _greeting,
+                              _greeting.isEmpty ? 'Hello!' : _greeting,
                               style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -274,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
 
-                // Main content with white background and rounded corners
+                // Main content
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -283,16 +288,14 @@ class _HomePageState extends State<HomePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const SizedBox(height: 8),
-                          // Discount banner
                           const SlideShowDiscountFood(),
                           const SizedBox(height: 8),
-                          // Category circles
                           Container(
                             height: 230,
                             margin: const EdgeInsets.only(top: 10),
                             padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                             decoration: BoxDecoration(
-                              color: Colors.yellow[100], // Yellow background
+                              color: Colors.yellow[100],
                               borderRadius: BorderRadius.circular(16),
                             ),
                             child: Column(
@@ -314,15 +317,7 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 SizedBox(
                                   height: 160,
-                                  child: FoodCategory(
-                                    onCategorySelected: (category) {
-                                      if (mounted) {
-                                        setState(() {
-                                          selectedCategory = category;
-                                        });
-                                      }
-                                    },
-                                  ),
+                                  child: FoodCategory(),
                                 ),
                               ],
                             ),
@@ -330,16 +325,17 @@ class _HomePageState extends State<HomePage> {
                           _buildSectionHeader(
                               AppLocalizations.of(context)?.hotPromotion ??
                                   'Hot Promotion', () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const ViewAllBestSeller()),
-                            );
+                            if (mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const ViewAllBestSeller()),
+                              );
+                            }
                           }),
-                          const BestSeller(),
+                          BestSeller(),
                           const SizedBox(height: 8),
-                          // Divider line
                           Container(
                             height: 1,
                             color: const Color(0xFFFFD8C7),
@@ -348,15 +344,16 @@ class _HomePageState extends State<HomePage> {
                           _buildSectionHeader(
                               AppLocalizations.of(context)?.newArrival ??
                                   'New Arrival', () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const NewArrivalScreen()),
-                            );
+                            if (mounted) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const NewArrivalScreen()),
+                              );
+                            }
                           }),
-                          const NewArrivalFood(),
-                          // Add extra space at bottom for floating cart button
+                          NewArrivalFood(),
                           const SizedBox(height: 80),
                         ],
                       ),
@@ -365,7 +362,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            // Add floating cart icon
             const CartIcon(isFloating: true),
           ],
         ),

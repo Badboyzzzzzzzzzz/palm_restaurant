@@ -7,10 +7,8 @@ import 'package:palm_ecommerce_app/ui/provider/async_values.dart';
 import 'package:palm_ecommerce_app/util/animation.dart';
 
 class FoodCategory extends StatefulWidget {
-  final Function(String) onCategorySelected;
   const FoodCategory({
     super.key,
-    required this.onCategorySelected,
   });
   @override
   State<FoodCategory> createState() => _FoodCategoryState();
@@ -28,7 +26,6 @@ class _FoodCategoryState extends State<FoodCategory> {
   @override
   Widget build(BuildContext context) {
     final subCategoryId = context.watch<CategoryProvider>().subCategories;
-
     return Consumer<CategoryProvider>(
       builder: (context, provider, _) {
         final state = provider.categories;
@@ -72,9 +69,6 @@ class _FoodCategoryState extends State<FoodCategory> {
 
               return GestureDetector(
                 onTap: () {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    widget.onCategorySelected(category.id);
-                  });
                   Navigator.of(context).push(
                     AnimationUtils.createBottomToTopRoute(
                       CategoryBody(

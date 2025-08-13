@@ -24,7 +24,7 @@ class NotificationApiRepository implements NotificationRepository {
             'No authentication token available. Please login first.');
       }
       List<NotificationData> allNotifications = [];
-      int currentPage = 1;
+      int currentPage = 0;
       bool hasMorePages = true;
       while (hasMorePages) {
         final response = await FetchingData.getDataPar(

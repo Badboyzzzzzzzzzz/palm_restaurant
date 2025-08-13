@@ -109,17 +109,11 @@ class FetchingData {
     Map<String, File>? files,
   ) async {
     var request = http.MultipartRequest('POST', Uri.parse(url));
-  
-    // Add headers
-    request.headers.addAll(headers);
-
-    // Add text fields
+      request.headers.addAll(headers);
     fields.forEach((key, value) {
       request.fields[key] = value.toString();
     });
-    
-    // Add files
-    if (files != null) {
+      if (files != null) {
       for (var entry in files.entries) {
         var multipartFile = await http.MultipartFile.fromPath(
           entry.key,
@@ -128,18 +122,15 @@ class FetchingData {
         request.files.add(multipartFile);
       }
     }
-    
     var streamedResponse = await request.send();
     return await http.Response.fromStream(streamedResponse);
   }
-
   static Future<http.Response> deleteCart(String provideUrl,
       Map<String, dynamic> param, Map<String, String> header) async {
     var url = Uri.https(baseUrl.replaceAll('https://', ''), provideUrl, param);
     final response = await http.delete(url, headers: header);
     return response;
   }
-
   static Future<http.Response> updateCartQuantity(String provideUrl,
       Map<String, String> param, Map<String, dynamic> parBody) async {
     var url = Uri.https(baseUrl.replaceAll('https://', ''), provideUrl);
@@ -151,7 +142,6 @@ class FetchingData {
     final response = await http.post(url, headers: param, body: requestBody);
     return response;
   }
-
   static Future<http.Response> postHeaderMd5(
     String url,
     Map<String, String> headers,

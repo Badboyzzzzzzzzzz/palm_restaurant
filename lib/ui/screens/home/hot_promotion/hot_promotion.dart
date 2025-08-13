@@ -17,7 +17,6 @@ class _ViewAllBestSellerState extends State<ViewAllBestSeller> {
   @override
   void initState() {
     super.initState();
-    // Fetch top sale products when the screen is opened
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProductProvider>().fetchTopSaleFood();
     });
@@ -38,8 +37,7 @@ class _ViewAllBestSellerState extends State<ViewAllBestSeller> {
         break;
       case AsyncValueState.success:
         if (bestSeller.data == null || bestSeller.data!.isEmpty) {
-          content =
-              const Center(child: Text('No best seller products available'));
+          content = _buildEmptyState();
         } else {
           content = GridView.builder(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -87,7 +85,8 @@ class _ViewAllBestSellerState extends State<ViewAllBestSeller> {
                   ),
                   const Spacer(),
                   Text(
-                    AppLocalizations.of(context)?.bestSeller ?? 'Best Seller',
+                    AppLocalizations.of(context)?.hotPromotion ??
+                        'Hot Promotion',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -134,6 +133,42 @@ class _ViewAllBestSellerState extends State<ViewAllBestSeller> {
                   ),
                 ),
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return SizedBox(
+      height: 260,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.local_fire_department_outlined,
+              size: 64,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No Hot Promotions',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF391713),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Check back later for amazing deals!',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),

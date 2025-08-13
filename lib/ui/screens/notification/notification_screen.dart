@@ -9,7 +9,6 @@ import 'package:palm_ecommerce_app/l10n/app_localizations.dart';
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
 
-  // static String nameRoutes  = 'notification_Screen';
 
   @override
   Widget build(BuildContext context) {
@@ -44,8 +43,8 @@ class NotificationScreen extends StatelessWidget {
           ),
         ),
         title: Text(
-          AppLocalizations.of(context)!.notifications,
-          style: TextStyle(color: Colors.black),
+          AppLocalizations.of(context)?.notifications ?? 'Notifications',
+          style: TextStyle(color: Colors.black,),
         ),
         actions: [
           IconButton(

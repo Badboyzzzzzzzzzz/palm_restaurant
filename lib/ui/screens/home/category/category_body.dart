@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:palm_ecommerce_app/ui/provider/category_provider.dart';
 import 'package:palm_ecommerce_app/ui/screens/home/widget/cart_icon.dart';
@@ -86,7 +87,9 @@ class _CategoryBodyState extends State<CategoryBody>
   @override
   Widget build(BuildContext context) {
     final categoryProvider = Provider.of<CategoryProvider>(context);
-    print("main category id ${widget.categoryId}");
+    if (kDebugMode) {
+      print("main category id ${widget.categoryId}");
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(

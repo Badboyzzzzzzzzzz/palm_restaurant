@@ -63,6 +63,19 @@
     java.lang.Object readResolve();
 }
 
+# Additional rules for Flutter and Dart models
+-keep class ** { *; }
+-keepattributes *
+
+# Provider and state management
+-keep class ** extends java.lang.Object
+-keep class ** implements java.io.Serializable
+
+# Keep all JSON models and data classes
+-keepclassmembers class ** {
+    @com.google.gson.annotations.SerializedName <fields>;
+}
+
 # Disable warnings for missing classes
 -dontwarn javax.annotation.**
 -dontwarn kotlin.Unit

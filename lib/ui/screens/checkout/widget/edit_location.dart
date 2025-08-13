@@ -342,7 +342,6 @@ class _UserLocationState extends State<UserLocation> {
         selectedLocationPlace = saveChooseAddressPlace;
       });
     }
-    // Load existing photos if available
     for (String path in addressPhotoPaths) {
       if (selectedImages.length < 3 && path.isNotEmpty) {
         try {
@@ -439,8 +438,6 @@ class _UserLocationState extends State<UserLocation> {
   Widget build(BuildContext context) {
     return Consumer2<AddressProvider, AuthenticationProvider>(
       builder: (context, addressProvider, authProvider, child) {
-        // Use provider error if available, otherwise use local error
-        // Try to get user data from auth provider if fields are empty
         if ((_nameController.text.isEmpty || _phoneController.text.isEmpty) &&
             authProvider.userInfo != null) {
           if (_nameController.text.isEmpty) {
@@ -452,7 +449,6 @@ class _UserLocationState extends State<UserLocation> {
         }
         return Scaffold(
           appBar: AppBar(
-            
             centerTitle: true,
             leading: Padding(
               padding: const EdgeInsets.only(left: 4.0),
@@ -480,7 +476,11 @@ class _UserLocationState extends State<UserLocation> {
               ),
             ),
             title: Text('Edit Address',
-                style: TextStyle(color:  Colors.white, fontSize: 20)),
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5)),
             backgroundColor: Color(0xFFF5D248),
             elevation: 0,
           ),

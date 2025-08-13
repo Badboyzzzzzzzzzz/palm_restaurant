@@ -1,14 +1,11 @@
 import 'dart:convert';
 import 'package:logging/logging.dart';
-import 'package:palm_ecommerce_app/data/dto/category_dto/main_category_dto.dart';
-import 'package:palm_ecommerce_app/data/dto/category_dto/sub_category.dart';
 import 'package:palm_ecommerce_app/data/network/api_endpoints.dart';
 import 'package:palm_ecommerce_app/data/network/fetchingdata.dart';
 import 'package:palm_ecommerce_app/data/repository/https/authentication_api_repository.dart';
 import 'package:palm_ecommerce_app/data/repository/product_repository.dart';
-import 'package:palm_ecommerce_app/models/category/sub_category.dart';
+import 'package:palm_ecommerce_app/models/banner.dart';
 import 'package:palm_ecommerce_app/models/product/product.dart';
-import 'package:palm_ecommerce_app/models/category/main_category.dart';
 
 class ProductApiRepository implements ProductRepository {
   static final _logger = Logger('ProductApiRepository');
@@ -43,8 +40,7 @@ class ProductApiRepository implements ProductRepository {
         final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
         final products = _parseProductsList(jsonResponse);
         for (var product in products) {
-          _productCache[product.productId ?? ''] =
-              product; 
+          _productCache[product.productId ?? ''] = product;
         }
         return products;
       }
@@ -66,7 +62,7 @@ class ProductApiRepository implements ProductRepository {
         throw Exception(
             'No authentication token available. Please login first.');
       }
-      final endpoint = 'api/product-related';
+
       final queryParams = {
         'company_id': 'PALM-0006',
         'branch_id': 'PALM-00060001',
@@ -74,7 +70,7 @@ class ProductApiRepository implements ProductRepository {
       };
       _logger.fine('Fetching related products for product ID: $productId');
       final response = await FetchingData.getDataPar(
-        endpoint,
+        ApiConstant.getRelateFood,
         queryParams,
         _getAuthHeaders(token),
       );
@@ -112,8 +108,7 @@ class ProductApiRepository implements ProductRepository {
       final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
       final products = _parseProductsList(jsonResponse);
       for (var product in products) {
-        _productCache[product.productId ?? ''] =
-            product; 
+        _productCache[product.productId ?? ''] = product;
       }
       return products;
     }
@@ -136,7 +131,6 @@ class ProductApiRepository implements ProductRepository {
     if (jsonData is List) {
       productsList = jsonData;
     } else if (jsonData is Map) {
-    
       productsList = jsonData['data'] as List? ?? [];
     } else {
       _logger.warning('Unexpected data format: $jsonData');
@@ -150,30 +144,9 @@ class ProductApiRepository implements ProductRepository {
     _logger.fine('Successfully parsed ${products.length} products');
     return products;
   }
+
   void clearCache() {
     _productCache.clear();
-  }
-
-  @override
-  Future<List<SubCategoryModel>> getSubCategory(String categoryId) async {
-    final token = await repository.getCurrentToken();
-    if (token.isEmpty) {
-      throw Exception('No authentication token available. Please login first.');
-    }
-    final response = await FetchingData.getData(
-      'api/get-sub-category/PALM-0006',
-      _getAuthHeaders(token),
-    );
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
-      final data = jsonResponse['data'] as List<dynamic>?;
-      if (data == null) return [];
-      return data
-          .map((item) => SubCategoryDTO.fromJson(item))
-          .where((sub) => sub.mainCategoryId == categoryId)
-          .toList();
-    }
-    throw Exception('Failed to load products: \\${response.statusCode}');
   }
 
   @override
@@ -212,7 +185,7 @@ class ProductApiRepository implements ProductRepository {
         final productsData = data['data'] as List<dynamic>;
 
         if (productsData.isEmpty) {
-          return []; 
+          return [];
         }
         return productsData
             .map((item) => ProductDetailModel.fromJson(item))
@@ -225,25 +198,6 @@ class ProductApiRepository implements ProductRepository {
       _logger.severe('Error in search: $e');
       throw Exception('SEARCH Error: $e');
     }
-  }
-
-  @override
-  Future<List<MainCategoryModel>> getCategoryProduct() async {
-    final token = await repository.getCurrentToken();
-    if (token.isEmpty) {
-      throw Exception('No authentication token available. Please login first.');
-    }
-    final response = await FetchingData.getData(
-      'api/get-main-category/PALM-0006',
-      _getAuthHeaders(token),
-    );
-    if (response.statusCode == 200) {
-      final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
-      final data = jsonResponse['data'] as List<dynamic>?;
-      if (data == null) return [];
-      return data.map((cat) => CategoryDTO.fromJson(cat)).toList();
-    }
-    throw Exception('Failed to load products: ${response.statusCode}');
   }
 
   @override
@@ -288,6 +242,52 @@ class ProductApiRepository implements ProductRepository {
           'Failed to load new arrival products: ${response.statusCode}');
     } catch (e) {
       throw Exception('Error fetching new arrival food: $e');
+    }
+  }
+
+  @override
+  Future<List<BannerModel>> getBannerSlideShow() async {
+    try {
+      final token = await repository.getCurrentToken();
+      if (token.isEmpty) {
+        throw Exception(
+            'No authentication token available. Please login first.');
+      }
+      final response = await FetchingData.getData(
+        ApiConstant.bannerSlideShow,
+        _getAuthHeaders(token),
+      );
+      if (response.statusCode == 200) {
+        final jsonResponse = json.decode(response.body) as Map<String, dynamic>;
+        _logger.fine('Banner slideshow response: $jsonResponse');
+        if (jsonResponse['data'] == null) {
+          _logger.warning('No data field found in banner slideshow response');
+          return [];
+        }
+        List<dynamic> bannersList;
+        if (jsonResponse['data'] is List) {
+          bannersList = jsonResponse['data'];
+        } else if (jsonResponse['data'] is Map &&
+            jsonResponse['data']['data'] is List) {
+          bannersList = jsonResponse['data']['data'];
+        } else {
+          return [];
+        }
+        final banners = <BannerModel>[];
+        for (var item in bannersList) {
+          try {
+            banners.add(BannerModel.fromJson(item));
+          } catch (e) {
+            _logger.warning('Error parsing banner slideshow item: $e');
+          }
+        }
+        return banners;
+      }
+      throw Exception(
+          'Failed to load banner slideshow: ${response.statusCode}');
+    } catch (e) {
+      _logger.severe('Error fetching banner slideshow: $e');
+      throw Exception('Error fetching banner slideshow: $e');
     }
   }
 }

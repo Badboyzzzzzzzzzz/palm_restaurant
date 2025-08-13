@@ -2,12 +2,14 @@ import 'dart:convert';
 import 'package:logging/logging.dart';
 import 'package:palm_ecommerce_app/data/dto/category_dto/main_category_dto.dart';
 import 'package:palm_ecommerce_app/data/dto/category_dto/sub_category.dart';
+import 'package:palm_ecommerce_app/data/network/api_endpoints.dart';
 import 'package:palm_ecommerce_app/data/network/fetchingdata.dart';
 import 'package:palm_ecommerce_app/data/repository/category_repository.dart';
 import 'package:palm_ecommerce_app/data/repository/https/authentication_api_repository.dart';
 import 'package:palm_ecommerce_app/models/category/sub_category.dart';
 import 'package:palm_ecommerce_app/models/product/product.dart';
 import 'package:palm_ecommerce_app/models/category/main_category.dart';
+
 class CategoryApiRepository extends CategoryRepository {
   static final _logger = Logger('CategoryApiRepository');
   late AuthenticationApiRepository repository;
@@ -36,7 +38,7 @@ class CategoryApiRepository extends CategoryRepository {
       throw Exception('No authentication token available. Please login first.');
     }
     final response = await FetchingData.getData(
-      'api/get-main-category/PALM-0006',
+      ApiConstant.mainCategory,
       _getAuthHeaders(token),
     );
     if (response.statusCode == 200) {
@@ -63,7 +65,7 @@ class CategoryApiRepository extends CategoryRepository {
             'No authentication token available. Please login first.');
       }
       final response = await FetchingData.getData(
-        'api/get-sub-category/PALM-0006',
+        ApiConstant.subCategories,
         _getAuthHeaders(token),
       );
       _logger.fine('Sub-categories response status: ${response.statusCode}');
@@ -90,6 +92,7 @@ class CategoryApiRepository extends CategoryRepository {
       rethrow;
     }
   }
+
   @override
   Future<List<ProductDetailModel>> getProductsBySubCategory(
       String subCategoryId) async {
@@ -106,7 +109,7 @@ class CategoryApiRepository extends CategoryRepository {
         'sort': '1',
       };
       final response = await FetchingData.getDataPar(
-        'api/get-product-by-sub-category',
+        ApiConstant.getProductsBySubCategory,
         params,
         _getAuthHeaders(token),
       );
@@ -150,11 +153,13 @@ class CategoryApiRepository extends CategoryRepository {
       throw Exception('Error fetching products by sub-category: $e');
     }
   }
+
   void clearCaches() {
     _categoriesCache = null;
     _subCategoriesCache.clear();
     _productsByCategoryCache.clear();
   }
+
   String _identifyProblematicFields(Map<String, dynamic> item) {
     final fieldTypes = <String, String>{};
     item.forEach((key, value) {

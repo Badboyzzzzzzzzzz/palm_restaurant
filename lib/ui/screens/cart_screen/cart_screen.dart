@@ -90,8 +90,8 @@ class _CartScreenState extends State<CartScreen> {
                         Expanded(
                           child: Center(
                             child: Text(
-                              AppLocalizations.of(context)?.cart ?? 'Cart',
-                              style: GoogleFonts.leagueSpartan(
+                              AppLocalizations.of(context)?.cart ?? 'My Cart',
+                              style: TextStyle(
                                 fontSize: 24,
                                 letterSpacing: 0.5,
                                 fontWeight: FontWeight.bold,

@@ -113,7 +113,7 @@ class _OrderScreenState extends State<OrderScreen>
         automaticallyImplyLeading: false,
         centerTitle: true,
         backgroundColor: primaryBackgroundColor,
-        title: Text(AppLocalizations.of(context)?.orders ?? 'Orders',
+        title: Text(AppLocalizations.of(context)?.orders ?? 'My Orders',
             style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

@@ -226,9 +226,9 @@ class _CheckOutState extends State<CheckOut> with TickerProviderStateMixin {
           title: Text(AppLocalizations.of(context)!.checkout,
               style: TextStyle(
                   color: whiteColor,
-                  fontSize: 22,
+                  fontSize: 24,
                   letterSpacing: 0.5,
-                  fontWeight: FontWeight.w600)),
+                  fontWeight: FontWeight.bold)),
         ),
       ),
       body: Stack(

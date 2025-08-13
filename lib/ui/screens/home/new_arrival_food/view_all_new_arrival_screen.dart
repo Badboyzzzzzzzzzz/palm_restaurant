@@ -16,7 +16,6 @@ class _NewArrivalScreenState extends State<NewArrivalScreen> {
   @override
   void initState() {
     super.initState();
-    // Fetch new arrival food products when the screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<ProductProvider>().fetchNewArrivalFood();
     });
@@ -24,14 +23,11 @@ class _NewArrivalScreenState extends State<NewArrivalScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print(
-        'New Arrival Food: ${context.read<ProductProvider>().newArrivalFood.data?.length}');
     return Scaffold(
       backgroundColor: primaryBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-            // Top bar with back and title
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: Row(

@@ -39,10 +39,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get categories => 'Categories';
 
   @override
-  String get cart => 'Cart';
+  String get cart => 'My Cart';
 
   @override
-  String get orders => 'Orders';
+  String get orders => 'My Orders';
 
   @override
   String get profile => 'My Profile';

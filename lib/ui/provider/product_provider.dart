@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:palm_ecommerce_app/data/repository/product_repository.dart';
+import 'package:palm_ecommerce_app/models/banner.dart';
 import 'package:palm_ecommerce_app/models/product/product.dart';
 import 'package:palm_ecommerce_app/ui/provider/async_values.dart';
 
@@ -12,6 +14,7 @@ class ProductProvider with ChangeNotifier {
   AsyncValue<List<ProductDetailModel>> _topSaleFood = AsyncValue.empty();
   AsyncValue<List<ProductDetailModel>> _relatedProduct = AsyncValue.empty();
   AsyncValue<List<ProductDetailModel>> _searchFoodDishes = AsyncValue.empty();
+  AsyncValue<List<BannerModel>> _slideShow = AsyncValue.empty();
   ProductProvider({required this.repository});
   //Catch
   List<ProductDetailModel> _cachedProduct = [];
@@ -19,6 +22,7 @@ class ProductProvider with ChangeNotifier {
   List<ProductDetailModel> _cachedTopSaleFood = [];
   List<ProductDetailModel> _cachedRelatedProduct = [];
   List<ProductDetailModel> _cachedSearchFoodDishes = [];
+  List<BannerModel> _cachedSlideShow = [];
 
   // Getters
   AsyncValue<List<ProductDetailModel>> get products => _products;
@@ -28,8 +32,21 @@ class ProductProvider with ChangeNotifier {
   AsyncValue<List<ProductDetailModel>> get relatedProduct => _relatedProduct;
   AsyncValue<List<ProductDetailModel>> get searchFoodDishes =>
       _searchFoodDishes;
+ AsyncValue<List<BannerModel>> get slideShow => _slideShow;
   bool get isLoading => _products.state == AsyncValueState.loading;
 
+  Future<void> fetchSlideShow() async {
+    _slideShow = AsyncValue.loading();
+    notifyListeners();
+    try {
+      final slideShow = await repository.getBannerSlideShow();
+      _cachedSlideShow = slideShow;
+      _slideShow = AsyncValue.success(_cachedSlideShow);
+    } catch (e) {
+      _slideShow = AsyncValue.error(e);
+    }
+    notifyListeners();
+  }
   Future<void> fetchProducts() async {
     _products = AsyncValue.loading();
     notifyListeners();
@@ -42,7 +59,6 @@ class ProductProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
   Future<void> fetchNewArrivalFood() async {
     _newArrivalFood = AsyncValue.loading();
     notifyListeners();
@@ -57,7 +73,6 @@ class ProductProvider with ChangeNotifier {
   }
 
   Future<void> fetchTopSaleFood() async {
-    // Return cached data immediately if available
     if (_cachedTopSaleFood.isNotEmpty) {
       _topSaleFood = AsyncValue.success(_cachedTopSaleFood);
       notifyListeners();
@@ -65,7 +80,6 @@ class ProductProvider with ChangeNotifier {
       _topSaleFood = AsyncValue.loading();
       notifyListeners();
     }
-
     try {
       final topSaleFood = await repository.superHotPromotion();
       _cachedTopSaleFood = topSaleFood;
@@ -80,9 +94,7 @@ class ProductProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
   Future<void> fetchRelatedProduct(String productId) async {
-    // Return cached data immediately if available
     if (_cachedRelatedProduct.isNotEmpty) {
       _relatedProduct = AsyncValue.success(_cachedRelatedProduct);
       notifyListeners();
@@ -90,14 +102,12 @@ class ProductProvider with ChangeNotifier {
       _relatedProduct = AsyncValue.loading();
       notifyListeners();
     }
-
     try {
       final relatedProduct = await repository.getRelatedProduct(productId);
       print('Number of related : ${relatedProduct.length}');
       _cachedRelatedProduct = relatedProduct;
       _relatedProduct = AsyncValue.success(relatedProduct);
     } catch (e) {
-      // If we have cached data, use it on error
       if (_cachedRelatedProduct.isNotEmpty) {
         _relatedProduct = AsyncValue.success(_cachedRelatedProduct);
       } else {
@@ -106,7 +116,6 @@ class ProductProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
   Future<void> fetchSearchFoodDishes(
       String searchFood, String categoryId) async {
     _searchFoodDishes = AsyncValue.loading();
@@ -125,18 +134,15 @@ class ProductProvider with ChangeNotifier {
     _selectedProduct = AsyncValue.empty();
     notifyListeners();
   }
-
   void clearProducts() {
     _products = AsyncValue.empty();
     notifyListeners();
   }
-
   void clearRelatedProducts() {
     _relatedProduct = AsyncValue.empty();
     _cachedRelatedProduct = [];
     notifyListeners();
   }
-
   void clearSearchResults() {
     _searchFoodDishes = AsyncValue.empty();
     _cachedSearchFoodDishes = [];

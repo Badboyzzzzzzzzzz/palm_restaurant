@@ -16,13 +16,14 @@ class ApiConstant {
       '/api/get-product-super-hot-promotion/PALM-00060001/PALM-0006/';
   static const String newArrivalProduct =
       '/api/get-product-new-arrive/PALM-00060001/PALM-0006/';
-  static const String relatedProduct =
-      '/api/product-related?company_id=PALM-0006&branch_id=PALM-00060001';
   static const String searchFoodDishes = '/api/search-product';
+  static const String bannerSlideShow = '/api/get-banner/PALM-0006';
+  static const String getRelateFood = 'api/product-related';
   // Category Endpoints
-  static const String categories = '/api/get-sub-category/PALM-0006/';
-  // Slideshow Endpoints
-  static const String slideshows = '/slideshows';
+  static const String mainCategory = '/api/get-main-category/PALM-0006';
+  static const String subCategories = '/api/get-sub-category/PALM-0006';
+  static const String getProductsBySubCategory =
+      '/api/get-product-by-sub-category';
   // Cart Endpoints
   static const String getCart = '/api/get-cart/';
   static const String addToCart = 'api/add_to_cart';
