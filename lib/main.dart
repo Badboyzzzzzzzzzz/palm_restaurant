@@ -36,7 +36,6 @@ void main() async {
    if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp();
   }
-  // ✅ Initialize repositories
   final authRepository = AuthenticationApiRepository();
   final productRepository = ProductApiRepository()..repository = authRepository;
   final categoryRepository = CategoryApiRepository(authRepository);
@@ -50,7 +49,6 @@ void main() async {
   final notificationRepository = NotificationApiRepository()
     ..repository = authRepository;
   final bakongRepository = BakongApiRepository();
-
   runApp(
     MultiProvider(
       providers: [
@@ -87,7 +85,6 @@ void main() async {
     ),
   );
 }
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:palm_ecommerce_app/models/notfication/notification.dart';
 import 'package:palm_ecommerce_app/util/colors.dart';
 
-class NotificationCard extends StatelessWidget {
+class NotificationCard extends StatefulWidget {
   final NotificationData? notification;
   final VoidCallback? onTap;
   final bool showBorder;
@@ -15,264 +15,343 @@ class NotificationCard extends StatelessWidget {
     this.onTap,
     this.showBorder = true,
   });
+
+  @override
+  State<NotificationCard> createState() => _NotificationCardState();
+}
+
+class _NotificationCardState extends State<NotificationCard>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _scaleAnimation;
+  bool _isPressed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: const Duration(milliseconds: 150),
+      vsync: this,
+    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.98,
+    ).animate(CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bool isRead = notification?.isView == "1";
+    final bool isRead = widget.notification?.isView == "1";
 
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-          border: showBorder && !isRead
-              ? Border.all(color: Colorz.bgBlue.withOpacity(0.5), width: 1.5)
-              : null,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  color: isRead
-                      ? Colors.grey.shade200
-                      : Colorz.bgBlue.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-                child: _buildNotificationIcon(),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'PALM Restaurant',
-                            style: TextStyle(
-                              fontWeight:
-                                  isRead ? FontWeight.normal : FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.black87,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        if (!isRead)
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: const BoxDecoration(
-                              color: Colorz.bgBlue,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      notification?.description ?? 'No description',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
-                        height: 1.3,
+    return AnimatedBuilder(
+      animation: _scaleAnimation,
+      builder: (context, child) {
+        return Transform.scale(
+          scale: _scaleAnimation.value,
+          child: GestureDetector(
+            onTapDown: (_) {
+              setState(() => _isPressed = true);
+              _animationController.forward();
+            },
+            onTapUp: (_) {
+              setState(() => _isPressed = false);
+              _animationController.reverse();
+              if (widget.onTap != null) {
+                Future.delayed(const Duration(milliseconds: 100), () {
+                  widget.onTap!();
+                });
+              }
+            },
+            onTapCancel: () {
+              setState(() => _isPressed = false);
+              _animationController.reverse();
+            },
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              decoration: BoxDecoration(
+                gradient: isRead
+                    ? LinearGradient(
+                        colors: [
+                          Colors.white,
+                          Colors.grey.shade50,
+                        ],
+                      )
+                    : LinearGradient(
+                        colors: [
+                          Colors.white,
+                          Colorz.bgBlue.withOpacity(0.02),
+                        ],
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          notification?.date ?? 'Unknown date',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black45,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color: _isPressed
+                        ? Colorz.bgBlue.withOpacity(0.1)
+                        : Colors.black.withOpacity(0.03),
+                    blurRadius: _isPressed ? 3 : 2,
+                    spreadRadius: 0,
+                    offset: Offset(0, _isPressed ? 1 : 2),
+                  ),
+                ],
+                border: widget.showBorder && !isRead
+                    ? Border.all(
+                        color: Colorz.bgBlue.withOpacity(0.3),
+                        width: 1.5,
+                      )
+                    : Border.all(
+                        color: Colors.grey.withOpacity(0.1),
+                        width: 1,
+                      ),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Stack(
+                  children: [
+                    // Subtle gradient overlay for unread notifications
+                    if (!isRead)
+                      Positioned(
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: 4,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colorz.bgBlue,
+                                Colorz.bgDeepBlue,
+                              ],
+                            ),
                           ),
                         ),
-                        Text(
-                          notification?.time ?? '',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Colors.black45,
+                      ),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          _buildIconContainer(isRead),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: _buildContent(isRead),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildIconContainer(bool isRead) {
+    return Hero(
+      tag: 'notification_${widget.notification?.id}',
+      child: Container(
+        width: 56,
+        height: 56,
+        decoration: BoxDecoration(
+          gradient: isRead
+              ? LinearGradient(
+                  colors: [
+                    Colors.grey.shade200,
+                    Colors.grey.shade300,
+                  ],
+                )
+              : LinearGradient(
+                  colors: [
+                    Colorz.bgBlue.withOpacity(0.1),
+                    Colorz.bgDeepBlue.withOpacity(0.2),
+                  ],
+                ),
+          shape: BoxShape.circle,
+          border: Border.all(
+            color:
+                isRead ? Colors.grey.shade300 : Colorz.bgBlue.withOpacity(0.3),
+            width: 2,
           ),
         ),
+        child: _buildNotificationIcon(isRead),
       ),
     );
   }
 
-  Widget _buildNotificationIcon() {
-    IconData iconData;
-    Color iconColor;
-    // Determine icon based on notification type
-    switch (notification?.pionter) {
-      case 'order':
-        iconData = Icons.shopping_bag_outlined;
-        iconColor = Colors.orange;
-        break;
-      case 'promotion':
-        iconData = Icons.local_offer_outlined;
-        iconColor = Colors.green;
-        break;
-      case 'product':
-        iconData = Icons.fastfood_outlined;
-        iconColor = Colors.purple;
-        break;
-      default:
-        iconData = Icons.notifications_outlined;
-        iconColor = Colorz.bgBlue;
-        return Image.asset('assets/palmlogo.png');
-    }
-    return Icon(iconData, color: iconColor, size: 24);
-  }
-}
-
-class NotificationDetails extends StatelessWidget {
-  final NotificationData? notification;
-
-  const NotificationDetails({
-    super.key,
-    this.notification,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    if (notification == null) {
-      return const Scaffold(
-        body: Center(
-          child: Text('Notification not found'),
-        ),
-      );
-    }
-
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          color: Colors.black,
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        title: const Text(
-          'Notification Details',
-          style: TextStyle(color: Colors.black),
-        ),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildContent(bool isRead) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            // Header with date and time
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  notification!.date ?? 'Unknown date',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black54,
+            Expanded(
+              child: Row(
+                children: [
+                  Flexible(
+                    child: Text(
+                      'PALM Restaurant',
+                      style: TextStyle(
+                        fontWeight: isRead ? FontWeight.w500 : FontWeight.bold,
+                        fontSize: 17,
+                        color: isRead ? Colors.grey.shade700 : Colors.black87,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                ),
-                Text(
-                  notification!.time ?? '',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.black54,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-
-            // Title
-            Text(
-              'PALM Restaurant',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+                  if (!isRead) ...[
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [Colorz.bgBlue, Colorz.bgDeepBlue],
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Text(
+                        'NEW',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
               ),
             ),
-            const SizedBox(height: 16),
-            // Image if available
-            Image.asset('assets/palmlogo.png'),
-            const SizedBox(height: 16),
-            // Description
-            Text(
-              notification!.description ?? 'No description available',
-              style: const TextStyle(
-                fontSize: 16,
-                color: Colors.black87,
-                height: 1.5,
-              ),
-            ),
-            // Action buttons based on notification type
-            const SizedBox(height: 24),
-            if (notification!.pionter == 'order')
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to order details
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colorz.bgBlue,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+            if (!isRead)
+              Container(
+                width: 10,
+                height: 10,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Colorz.bgBlue, Colorz.bgDeepBlue],
                   ),
-                ),
-                child: const Text(
-                  'View Order',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-            if (notification!.pionter == 'product')
-              ElevatedButton(
-                onPressed: () {
-                  // Navigate to product details
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colorz.bgBlue,
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                child: const Text(
-                  'View Product',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  shape: BoxShape.circle,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colorz.bgBlue.withOpacity(0.5),
+                      blurRadius: 4,
+                      spreadRadius: 1,
+                    ),
+                  ],
                 ),
               ),
           ],
         ),
+        const SizedBox(height: 8),
+        Text(
+          widget.notification?.description ?? 'No description',
+          style: TextStyle(
+            fontSize: 15,
+            color: isRead ? Colors.grey.shade600 : Colors.black54,
+            height: 1.4,
+          ),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        const SizedBox(height: 12),
+        _buildTimeInfo(isRead),
+      ],
+    );
+  }
+
+  Widget _buildTimeInfo(bool isRead) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: isRead ? Colors.grey.shade100 : Colorz.bgBlue.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isRead ? Colors.grey.shade200 : Colorz.bgBlue.withOpacity(0.1),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.access_time_rounded,
+            size: 14,
+            color: isRead ? Colors.grey.shade500 : Colorz.bgBlue,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '${widget.notification?.date ?? 'Unknown'} • ${widget.notification?.time ?? ''}',
+            style: TextStyle(
+              fontSize: 12,
+              color: isRead ? Colors.grey.shade500 : Colorz.bgBlue,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotificationIcon(bool isRead) {
+    IconData iconData;
+    List<Color> iconColors;
+
+    // Determine icon based on notification type
+    switch (widget.notification?.pionter) {
+      case 'order':
+        iconData = Icons.shopping_bag_outlined;
+        iconColors = isRead
+            ? [Colors.orange.shade300, Colors.orange.shade400]
+            : [Colors.orange, Colors.deepOrange];
+        break;
+      case 'promotion':
+        iconData = Icons.local_offer_outlined;
+        iconColors = isRead
+            ? [Colors.green.shade300, Colors.green.shade400]
+            : [Colors.green, Colors.teal];
+        break;
+      case 'product':
+        iconData = Icons.fastfood_outlined;
+        iconColors = isRead
+            ? [Colors.purple.shade300, Colors.purple.shade400]
+            : [Colors.purple, Colors.deepPurple];
+        break;
+      default:
+        iconData = Icons.notifications_outlined;
+        iconColors = isRead
+            ? [
+                Colorz.bgBlue.withOpacity(0.5),
+                Colorz.bgDeepBlue.withOpacity(0.5)
+              ]
+            : [Colorz.bgBlue, Colorz.bgDeepBlue];
+        break;
+    }
+
+    return ShaderMask(
+      shaderCallback: (bounds) => LinearGradient(
+        colors: iconColors,
+      ).createShader(bounds),
+      child: Icon(
+        iconData,
+        color: Colors.white,
+        size: 24,
       ),
     );
   }

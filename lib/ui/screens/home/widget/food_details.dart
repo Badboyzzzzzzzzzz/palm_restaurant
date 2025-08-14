@@ -33,7 +33,7 @@ class _FoodDetailsState extends State<FoodDetails>
     print('FoodDetails initState');
     print('Product ID: ${widget.product.productId}');
     print('Product Name: ${widget.product.productNameEn}');
-    print('Product Price: ${widget.product.salePrice}');
+    print('Product Price: ${widget.product.priceAfterPromotion}');
     print('Product Photos: ${widget.product.photo?.length}');
     print('Full product object: $widget.product');
     isFavourite = widget.product.isFavourite == 1;
@@ -338,12 +338,12 @@ class _FoodDetailsState extends State<FoodDetails>
                                 ),
                                 // Price
                                 Text(
-                                  '\$${product.salePrice}',
+                                  '\$${product.priceAfterPromotion}',
                                   style: const TextStyle(
                                     fontFamily: 'Poppins',
                                     fontSize: 22,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFFC9AA05),
+                                    color: Color(0xFFFFCA48),
                                   ),
                                 ),
                               ],

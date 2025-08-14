@@ -272,7 +272,7 @@ class _BestSellerItemState extends State<BestSellerItem> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        '\$${widget.product.salePrice}',
+                        '\$${widget.product.priceAfterPromotion}',
                         style: TextStyle(
                           color: Color(0xFFFFCA48),
                           fontSize: 16,
@@ -280,12 +280,8 @@ class _BestSellerItemState extends State<BestSellerItem> {
                         ),
                       ),
                       const SizedBox(width: 5),
-                      if (widget.product.priceAfterPromotion != null &&
-                          widget.product.priceAfterPromotion != "0" &&
-                          widget.product.priceAfterPromotion !=
-                              widget.product.salePrice)
                         Text(
-                          '\$${widget.product.priceAfterPromotion}',
+                          '\$${widget.product.salePrice}',
                           style: TextStyle(
                             color: Colors.grey,
                             fontSize: 12,
