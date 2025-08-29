@@ -59,10 +59,8 @@ class _HomePageState extends State<HomePage> {
 
   void _updateGreeting() {
     if (!mounted) return;
-
     final localizations = AppLocalizations.of(context);
     if (localizations == null) return;
-
     final hour = DateTime.now().hour;
     if (mounted) {
       setState(() {
@@ -76,10 +74,8 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
-
   Future<void> _loadUserData() async {
     if (!mounted) return;
-
     try {
       final authProvider =
           Provider.of<AuthenticationProvider>(context, listen: false);
@@ -94,7 +90,6 @@ class _HomePageState extends State<HomePage> {
       debugPrint('Error loading user data: $e');
     }
   }
-
   Future<void> _initializeData() async {
     // Use addPostFrameCallback more safely
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -103,7 +98,6 @@ class _HomePageState extends State<HomePage> {
       }
     });
   }
-
   @override
   void dispose() {
     _debounceTimer?.cancel();
@@ -135,7 +129,6 @@ class _HomePageState extends State<HomePage> {
       debugPrint('Error fetching data: $e');
     }
   }
-
   @override
   Widget build(BuildContext context) {
     final authProvider = context.watch<AuthenticationProvider>();

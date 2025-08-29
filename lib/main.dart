@@ -33,7 +33,7 @@ import 'package:palm_ecommerce_app/data/repository/https/bakong_api_repository.d
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-   if (Firebase.apps.isEmpty) {
+  if (Firebase.apps.isEmpty) {
     await Firebase.initializeApp();
   }
   final authRepository = AuthenticationApiRepository();
@@ -85,6 +85,7 @@ void main() async {
     ),
   );
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -119,5 +120,4 @@ class MyApp extends StatelessWidget {
       },
     );
   }
- 
 }

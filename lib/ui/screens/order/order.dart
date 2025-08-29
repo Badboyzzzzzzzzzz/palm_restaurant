@@ -1,5 +1,6 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:palm_ecommerce_app/ui/provider/order_provider.dart';
 import 'package:palm_ecommerce_app/util/themes.dart';
@@ -103,6 +104,56 @@ class _OrderScreenState extends State<OrderScreen>
     }
   }
 
+  Future<void> _refreshOrders() async {
+    try {
+      // Add haptic feedback for modern feel
+      HapticFeedback.lightImpact();
+
+      final orderProvider = context.read<OrderProvider>();
+
+      // Refresh order status first
+      await orderProvider.getOrderStatus();
+
+      // Get current selected status or use first status
+      if (orderProvider.orderStatus.data?.isNotEmpty ?? false) {
+        final statusId = orderProvider.selectedStatusId.isNotEmpty
+            ? orderProvider.selectedStatusId
+            : orderProvider.orderStatus.data!.first.statusProcessId ?? '';
+
+        // Refresh orders for current status
+        await orderProvider.getOrders(statusId);
+      }
+
+      // Success haptic feedback
+      HapticFeedback.selectionClick();
+    } catch (e) {
+      // Error haptic feedback
+      HapticFeedback.heavyImpact();
+
+      // Handle error silently or show a snackbar
+      debugPrint('Error refreshing orders: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                Icon(Icons.error_outline, color: Colors.white, size: 20),
+                const SizedBox(width: 8),
+                Text('Failed to refresh orders'),
+              ],
+            ),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final orderProvider = context.watch<OrderProvider>();
@@ -113,24 +164,11 @@ class _OrderScreenState extends State<OrderScreen>
         automaticallyImplyLeading: false,
         centerTitle: true,
         backgroundColor: primaryBackgroundColor,
-        title: Text(AppLocalizations.of(context)?.orders ?? 'My Orders',
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 24)),
-        actions: [
-          IconButton(
-            onPressed: () {
-              orderProvider.refreshOrderStatus().then((_) {
-                if (orderProvider.orderStatus.data?.isNotEmpty ?? false) {
-                  final firstStatus = orderProvider.orderStatus.data!.first;
-                  orderProvider.getOrders(firstStatus.statusProcessId ?? '');
-                }
-              });
-            },
-            icon: const Icon(Icons.refresh, color: Colors.white),
-          ),
-        ],
+        title: Text(
+          AppLocalizations.of(context)?.orders ?? 'My Orders',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+        ),
       ),
       body: SafeArea(
         child: Column(
@@ -179,60 +217,102 @@ class _OrderScreenState extends State<OrderScreen>
                         ),
                       )
                     : orders.isEmpty
-                        ? Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.receipt_long_outlined,
-                                  size: 70,
-                                  color: Colors.grey.shade400,
-                                ),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'No orders found',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.grey.shade600,
-                                    fontWeight: FontWeight.bold,
+                        ? RefreshIndicator(
+                            onRefresh: _refreshOrders,
+                            color: primaryBackgroundColor,
+                            backgroundColor: Colors.white,
+                            strokeWidth: 3.0,
+                            displacement: 50.0,
+                            edgeOffset: 20.0,
+                            child: SingleChildScrollView(
+                              physics: const AlwaysScrollableScrollPhysics(
+                                parent: BouncingScrollPhysics(),
+                              ),
+                              child: SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.6,
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.receipt_long_outlined,
+                                        size: 70,
+                                        color: Colors.grey.shade400,
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Text(
+                                        'No orders found',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.grey.shade600,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        'No orders for this status yet',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.grey.shade500,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 24),
+                                      Text(
+                                        'Pull down to refresh',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey.shade400,
+                                          fontStyle: FontStyle.italic,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  'No orders for this status yet',
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey.shade500,
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           )
-                        : ListView.builder(
-                            padding: const EdgeInsets.only(top: 8),
-                            itemCount: orders.length,
-                            itemBuilder: (context, index) {
-                              final order = orders[index];
+                        : RefreshIndicator(
+                            onRefresh: _refreshOrders,
+                            color: primaryBackgroundColor,
+                            backgroundColor: Colors.white,
+                            strokeWidth: 3.0,
+                            displacement: 50.0,
+                            edgeOffset: 20.0,
+                            child: ListView.builder(
+                              padding: const EdgeInsets.only(top: 8),
+                              physics: const AlwaysScrollableScrollPhysics(
+                                parent: BouncingScrollPhysics(),
+                              ),
+                              itemCount: orders.length,
+                              itemBuilder: (context, index) {
+                                final order = orders[index];
 
-                              return FoodWidget(
-                                orderId: order.bookingId ?? '',
-                                orderPhoto: order.orderphoto,
-                                price: order.isPickUp == '1'
-                                    ? (double.tryParse(order.grandTotal ?? '0') ?? 0) - 2
-                                    : (double.tryParse(order.grandTotal ?? '0') ?? 0),
-                                deliveryStatus: order.isPickUp == '1'
-                                    ? 'Pickup'
-                                    : 'Delivery',
-                                orderStatus:
-                                    order.processStatus ?? 'Processing',
-                                date: order.bookingDate ?? '',
-                                itemCount: order.orderphoto.length,
-                                onCancelPressed: () {
-                                  orderProvider
-                                      .cancelOrder(order.bookingId ?? '');
-                                },
-                              );
-                            },
+                                return FoodWidget(
+                                  orderId: order.bookingId ?? '',
+                                  orderPhoto: order.orderphoto,
+                                  price: order.isPickUp == '1'
+                                      ? (double.tryParse(
+                                                  order.grandTotal ?? '0') ??
+                                              0) -
+                                          2
+                                      : (double.tryParse(
+                                              order.grandTotal ?? '0') ??
+                                          0),
+                                  deliveryStatus: order.isPickUp == '1'
+                                      ? 'Pickup'
+                                      : 'Delivery',
+                                  orderStatus:
+                                      order.processStatus ?? 'Processing',
+                                  date: order.bookingDate ?? '',
+                                  itemCount: order.orderphoto.length,
+                                  onCancelPressed: () {
+                                    orderProvider
+                                        .cancelOrder(order.bookingId ?? '');
+                                  },
+                                );
+                              },
+                            ),
                           ),
               ),
             ),

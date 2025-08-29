@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously
 import 'package:flutter/material.dart';
 import 'package:palm_ecommerce_app/models/params/checkout_params.dart';
 import 'package:palm_ecommerce_app/ui/provider/address_provider.dart';
@@ -60,17 +60,25 @@ class _CheckOutState extends State<CheckOut> with TickerProviderStateMixin {
               waitingPayment.data?.bookingId != null) {
             double amount = 0.0;
             if (checkoutProvider.checkoutInfo.data?.grandTotal != null) {
-              amount = double.tryParse(checkoutProvider
-                      .checkoutInfo.data!.grandTotal!
-                      .replaceAll(',', '')) ??
-                  0.0;
-              if (selectedCheckOut == 'Pick Up' &&
-                  checkoutProvider.checkoutInfo.data?.deliveryFee != null) {
-                final deliveryFee = double.tryParse(checkoutProvider
-                        .checkoutInfo.data!.deliveryFee!
+              if (selectedCheckOut == 'Pick Up') {
+                // For pickup, calculate amount without delivery fee
+                final subtotal = double.tryParse(checkoutProvider
+                            .checkoutInfo.data!.totalPriceOfterDiscount
+                            ?.replaceAll(',', '') ??
+                        '0') ??
+                    0.0;
+                final taxAmount = double.tryParse(checkoutProvider
+                            .checkoutInfo.data!.taxAmount
+                            ?.replaceAll(',', '') ??
+                        '0') ??
+                    0.0;
+                amount = subtotal + taxAmount;
+              } else {
+                // For delivery, use the full grand total
+                amount = double.tryParse(checkoutProvider
+                        .checkoutInfo.data!.grandTotal!
                         .replaceAll(',', '')) ??
                     0.0;
-                amount -= deliveryFee;
               }
             }
             if (amount <= 0) {
@@ -233,7 +241,6 @@ class _CheckOutState extends State<CheckOut> with TickerProviderStateMixin {
       ),
       body: Stack(
         children: [
-          // Main content
           isLoading
               ? SizedBox.shrink()
               : SingleChildScrollView(
@@ -550,7 +557,7 @@ class _CheckOutState extends State<CheckOut> with TickerProviderStateMixin {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Sub Total (Include Tax)',
+                                    'Sub Total',
                                     style: TextStyle(
                                       color: Colors.grey,
                                     ),
@@ -608,31 +615,8 @@ class _CheckOutState extends State<CheckOut> with TickerProviderStateMixin {
                                 ],
                               ),
                               SizedBox(height: 8),
-
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'Discount',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    '-\$${checkoutInfo.data?.totalDiscountPrice ?? "0.00"}',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                              SizedBox(height: 8),
                               Divider(),
                               SizedBox(height: 8),
-
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -648,7 +632,7 @@ class _CheckOutState extends State<CheckOut> with TickerProviderStateMixin {
                                   Text(
                                     selectedCheckOut == 'Pick Up'
                                         ? '\$${((double.tryParse(checkoutInfo.data?.grandTotal?.replaceAll(',', '') ?? '0') ?? 0.0) - (double.tryParse(checkoutInfo.data?.deliveryFee?.replaceAll(',', '') ?? '0') ?? 0.0)).toStringAsFixed(2)}'
-                                        : '\$${((double.tryParse(checkoutInfo.data?.grandTotal?.replaceAll(',', '') ?? '0') ?? 0.0) - (double.tryParse(checkoutInfo.data?.totalDiscountPrice?.replaceAll(',', '') ?? '0') ?? 0.0)).toStringAsFixed(2)}',
+                                        : '\$${((double.tryParse(checkoutInfo.data?.grandTotal?.replaceAll(',', '') ?? '0') ?? 0.0))}',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -701,7 +685,7 @@ class _CheckOutState extends State<CheckOut> with TickerProviderStateMixin {
                                 checkoutInfo.data?.grandTotal != null &&
                                 checkoutInfo.data?.deliveryFee != null
                             ? '\$${((double.tryParse(checkoutInfo.data?.grandTotal?.replaceAll(',', '') ?? '0') ?? 0.0) - (double.tryParse(checkoutInfo.data?.deliveryFee?.replaceAll(',', '') ?? '0') ?? 0.0)).toStringAsFixed(2)}'
-                            : '\$${((double.tryParse(checkoutInfo.data?.grandTotal?.replaceAll(',', '') ?? '0') ?? 0.0) - (double.tryParse(checkoutInfo.data?.totalDiscountPrice?.replaceAll(',', '') ?? '0') ?? 0.0)).toStringAsFixed(2)}',
+                            : '\$${((double.tryParse(checkoutInfo.data?.grandTotal?.replaceAll(',', '') ?? '0') ?? 0.0))}',
                         style: TextStyle(
                           color: const Color(0xFFF5D248),
                           fontWeight: FontWeight.bold,
